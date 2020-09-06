@@ -2,21 +2,26 @@
 // SEIF3 - PROJECT #1 - WOF
 // console.log('linked');
 
-// **Part 2A:**
-// 1. Declare play new game function + player variable (user)
-//    - User to input name
-// 2. Write player function
-//    - **Option A: Spin Wheel** 
-//    - If not bankrupt, User to input letter
-//      - If correct, to add to earnings. User to input next letter until puzzle is completed or if player solves puzzle correctly
-//      - If wrong or repeated, next player to take over
-//    - If bankrupt or lose a turn, next player to take over
+// 3. **Option B: Buy A Vowel** 
+//     - (N.A. for 1st round)
+//     - Check if have sufficient money
+//     - If have, input vowel
+//         If input correct, to continue spin wheel 
 
 // **COMMIT WORK:-**
-// "Commit #2: Set up user and spin wheel/input letter function"
+// "Commit #3: Set up user-buy vowel function"
 
 
 //--------- PUZZLE & WHEEL SETUP ---------//
+
+const puzzleBoard = document.querySelector('#puzzle-board');
+const wheelBoard = document.querySelector('#wheel-board');
+const playerStand = document.querySelector('#player-stand');
+const scoreBoard = document.querySelector('#score-board');
+
+// Recheck regex
+const vowelsRegex = /^[aeiou]$/gi; 
+const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/gi; 
 
 //To update css & design later
 const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE MACADAMIA NUT COOKIES', 'DELICIOUS DECADENT DESSERTS', 'CASHING IN A HUGE STACK OF CHIPS', 'ALL-DAY SKI LIFT TICKETS', 'CASABLANCA MOROCCO', 'THE VIEW FROM THE TOP OF A MOUNTAIN', 'PERSONALIZED STATIONERY', 'ST. ELMO\'S FIRE EXTINGUISHER'];
@@ -24,16 +29,11 @@ const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE 
 //To update values later. Note 18 so far
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
 
-const puzzleBoard = document.querySelector('#puzzle-board');
-const wheelBoard = document.querySelector('#wheel-board');
-const playerStand = document.querySelector('#player-stand');
-const scoreBoard = document.querySelector('#score-board');
-
 // Initialize player data
 let playerCurrent = {
     name: "",
     earnedTotal: 0,   // total for all games
-    earnedCurrent: 0  // for current game only
+    earnedCurrent: 0 // for current game only
 }
 
 let puzzleCurrent = "";
@@ -75,15 +75,22 @@ function startNewGame() {
 }
 
 // Refine playerstand setup and CSS later
-// Validate user input
+// Improve validate user input prompt
 function initPlayer() {
 
     playerCurrent.name = prompt('Please enter your name');
-    let playerDiv = document.createElement('div');
-    let playerName = document.createTextNode(playerCurrent.name);
+    if (playerCurrent.name === "") {
+        alert("Name must not be empty");
+        return
 
-    playerDiv.append(playerName);
-    playerStand.append(playerDiv);
+    } else {
+        let playerDiv = document.createElement('div');
+        let playerName = document.createTextNode(playerCurrent.name);
+
+        playerDiv.append(playerName);
+        playerStand.append(playerDiv);
+
+    }
 
 }
 
@@ -93,6 +100,7 @@ function initPuzzle() {
 
     let randNum = Math.floor(Math.random() * puzzleArray.length);
     puzzleCurrent = puzzleArray[randNum];
+    console.log(puzzleCurrent);
 
     let puzzleDiv = document.createElement('div');
 
@@ -119,8 +127,6 @@ function initPuzzle() {
 }
 
 //--------- PLAYER FUNCTIONS ---------//
-// Collect player data: name, total earnings, current earnings
-// Add event listeners to buttons below
 // 1. Spin Wheel
 // 2. Guess Letter
 // 3. Buy Vowel
@@ -145,53 +151,94 @@ function spinWheel() {
 
     } else {
         let errorMsg = "GAME OVER: Sorry, you spinned BANKRUPT. Better luck next time!";
-        console.log(errorMsg);
-        alert(errorMsg);
-        exitGame();
+        exitGame(errorMsg);
     }
 
 }
 
+function isVowelOrConsonant(input) {
+    if (vowelsRegex.test(input)) {
+        return 'vowel';
+    } else if (consonantsRegex.test(input)) {
+        return 'consonant';
+    } else {
+        return false;
+    }
 
-// Update consonant letter check later
-// Validate user input later
+}
+
+// Validate user input later for other char #$%$#^%. 
+// Also change to lowercase
 function guessLetter() {
-    let letter = prompt('Guess a letter');
-    console.log('Current guess: ' + letter);
+    let letter = prompt('Guess a letter (consonant)');
+    let letterCheck = isVowelOrConsonant(letter);
 
-    guessLettersCurrent.push(letter);
-    console.log('Guessed letters to-date: ' + guessLettersCurrent);
-    // check letter against current puzzle
-    // if () {
+    // Validate player input
+    if (letter === "") {
+        let errorMsg = 'GAME OVER: You did not enter a letter!';
+        exitMsg(errorMsg);
 
+    } else if (letterCheck === false || letterCheck === 'vowel'){
+        let errorMsg = 'GAME OVER: You entered an invalid letter!';
+        exitGame(errorMsg);
 
-    // } 
+    } else {
+        guessLettersCurrent.push(letter);
+        console.log('Current guess: ' + letter);
+        console.log('Guessed letters to-date: ' + guessLettersCurrent);
+
+        // check if letter is a consonant
+        if (letterCheck === 'consonant') {
+            console.log('you entered a consonant');
+
+            // then check if consonant exists in current puzzle
+            // if () {
+            // } 
+
+        } else {
+            let errorMsg = 'GAME OVER: You entered a vowel instead of a consonant.';
+            exitGame(errorMsg);
+
+        }
+
+    }
+
 
 }
 
 
-// Update vowel letter check later
 // Validate user input later
 function buyVowel() {
 
     // Cost of each vowel = $250
     if (playerCurrent.earnedCurrent >= 250) {
-        let letter = prompt('Guess a letter');
+        let letter = prompt('Guess a letter (vowel)');
 
-        // check letter against current puzzle
-        // if () {
+        // check if letter is a vowel first
+        let vowelCheck = isVowelOrConsonant(letter);
+        if (vowelCheck === 'vowel') {
+            console.log('you entered a vowel');
 
-        // } 
+            // then check if vowel exists in current puzzle
+            // if () {
+
+            // } 
+
+        } else {
+            let errorMsg = 'GAME OVER: You entered a consonant instead of a vowel.'
+            exitGame(errorMsg);
+        }
+
 
     } else {
         let errorMsg = 'GAME OVER: Sorry, you do not have sufficient money to buy a vowel.';
-        console.log(errorMsg);
-        alert(errorMsg);
-        exitGame();
+        exitGame(errorMsg);
     }
 
 }
 
+
+// OK button gives default correct answer: to check!!!
 // Rephrase question to player later
 // Validate user input later
 function solvePuzzle() {
@@ -203,15 +250,12 @@ function solvePuzzle() {
             playerCurrent.earnedCurrent = 1000; // minimum earnings
         }
 
-        let successMsg = 'Congrats! You solved the puzzle! You\'ve earned ' + playerCurrent.earnedCurrent + ' for this game!';
-        console.log(successMsg);
-        alert(successMsg);
+        let successMsg = 'Congrats! You solved the puzzle! You\'ve earned ' + playerCurrent.earnedCurrent + ' for this game! See you again!';
+        exitGame(successMsg);
         
     } else {
         let errorMsg = 'GAME OVER: Sorry, wrong guess! Better luck next time!';
-        console.log(errorMsg);
-        alert(errorMsg);
-        exitGame();
+        exitGame(errorMsg);
         
     }
 
@@ -227,11 +271,18 @@ function checkIfExit() {
 
 }
 
-function exitGame() {
+function exitGame(msg) {
 
-    let exitMsg = 'Bye ' + playerCurrent.name + '! See you next time!';
-    console.log(exitMsg);
-    alert(exitMsg);
+    if (msg !== "") {
+        console.log(msg);
+        alert(msg);
+
+    } else {
+        let exitMsg = 'Bye ' + playerCurrent.name + '! See you next time!';
+        console.log(exitMsg);
+        alert(exitMsg);
+    
+    }
 
     // reset player data
     let playerReset = {
@@ -247,7 +298,8 @@ function exitGame() {
 }
 
 
-// INITIALIZE NEW GAME
+//--------- INITIALIZE NEW GAME ---------//
+
 initPlayer();
 initPuzzle();
 
