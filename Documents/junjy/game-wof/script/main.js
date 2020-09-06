@@ -85,10 +85,9 @@ function initPlayer() {
 
     } else {
         let playerDiv = document.createElement('div');
-        let playerName = document.createTextNode(playerCurrent.name);
-
-        playerDiv.append(playerName);
-        playerStand.append(playerDiv);
+        let playerInfo = document.createTextNode(`Player Name: ${playerCurrent.name}, Current Earnings: ${playerCurrent.earnedCurrent}`);
+        playerDiv.append(playerInfo);
+        playerStand.prepend(playerDiv);
 
     }
 
@@ -283,6 +282,8 @@ function exitGame(msg) {
         alert(exitMsg);
     
     }
+
+    // clear UI later
 
     // reset player data
     let playerReset = {
