@@ -1,0 +1,49 @@
+
+
+#puzzle-board {
+
+
+
+}
+
+.square-box {
+    width: 25px;
+    height: 25px;
+    border: 1px solid black;
+    display: inline-block;
+    text-align: center;
+    background: white;
+}
+
+.square-text {
+    background: white;
+    /* display: none; */
+
+}
+
+.square-blank {
+    background: green;
+
+}
+
+
+
+#puzzle-wheel {
+
+
+
+}
+
+
+
+#player-stand {
+
+
+
+}
+
+#score-board {
+
+
+
+}
