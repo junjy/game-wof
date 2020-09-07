@@ -29,7 +29,7 @@ const vowelCost = 250;
 let playerCurrent = {
     name: "",
     earnedTotal: 0,   // total for all games
-    earnedCurrent: 500 // for current game only
+    earnedCurrent: 0 // for current game only
 }
 
 // let puzzleCurrent = [];
@@ -256,8 +256,6 @@ function spinWheel() {
 }
 
 
-
-
 function guessLetter(spinValue) {
     let input = prompt('Guess a letter (consonant)');
     let letter = input.toLowerCase();
@@ -373,16 +371,27 @@ function buyVowel() {
 
 
 // OK button gives default correct answer: to check!!!
+// Change prompt to modal with buttons?
 // Rephrase question to player later
-// Validate user input later
+// Show earned total later
 function solvePuzzle() {
 
-    let answer = prompt('Type the puzzle answer below');
+    let input = prompt('Solve the puzzle by typing the answer below');
+    let answer = input.toUpperCase();
+    console.log('you entered: ' + answer);
 
-    if (answer === puzzleCurrent.text) {
+    // Validate player input
+    if (answer === "") {
+        let errorMsg = 'GAME OVER: You did not enter anything!';
+        exitGame(errorMsg);
+
+    } else if (answer === puzzleCurrent.text) {
         if (playerCurrent.earnedCurrent === 0) {
-            playerCurrent.earnedCurrent = 1000; // minimum earnings
+            playerCurrent.earnedCurrent = 1000; // min earnings
+
         }
+
+        playerCurrent.earnedTotal += playerCurrent.earnedCurrent;
 
         let successMsg = 'Congrats! You solved the puzzle! You\'ve earned ' + playerCurrent.earnedCurrent + ' for this game! See you again!';
         exitGame(successMsg);
