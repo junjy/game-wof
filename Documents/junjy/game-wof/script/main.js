@@ -20,8 +20,8 @@ const playerStand = document.querySelector('#player-stand');
 const scoreBoard = document.querySelector('#score-board');
 
 // Recheck regex
-const vowelsRegex = /^[aeiou]$/gi; 
-const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/gi; 
+const vowelsRegex = /^[aeiou]$/i; 
+const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 
 //To update css & design later
 const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE MACADAMIA NUT COOKIES', 'DELICIOUS DECADENT DESSERTS', 'CASHING IN A HUGE STACK OF CHIPS', 'ALL-DAY SKI LIFT TICKETS', 'CASABLANCA MOROCCO', 'THE VIEW FROM THE TOP OF A MOUNTAIN', 'PERSONALIZED STATIONERY', 'ST. ELMO\'S FIRE EXTINGUISHER'];
@@ -33,30 +33,41 @@ const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 
 let playerCurrent = {
     name: "",
     earnedTotal: 0,   // total for all games
-    earnedCurrent: 0 // for current game only
+    earnedCurrent: 500 // for current game only
 }
 
-let puzzleCurrent = "";
-let guessLettersCurrent = []; // letters guessed for current game only
+// let puzzleCurrent = [];
+let puzzleCurrent = {
+    text: "",
+    split: [],
+    vowels: [],
+    consonants: []
+};
+
+// letters guessed for current game only
+let guessLettersCurrent = {
+    vowels: [],
+    consonants: []
+};
 
 
 // Set up buttons 1.Spin Wheel 2.Buy a vowel 3.Solve It! 4.Exit Game
 let lineBreak = document.createElement('br');
 let btnSpinWheel = document.createElement('button');
-btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
-btnSpinWheel.innerHTML = 'Spin Wheel';
+    btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
+    btnSpinWheel.innerHTML = 'Spin Wheel';
 
 let btnBuyVowel = document.createElement('button');
-btnBuyVowel.setAttribute('id', 'btn-buy-vowel');
-btnBuyVowel.innerHTML = 'Buy Vowel';
+    btnBuyVowel.setAttribute('id', 'btn-buy-vowel');
+    btnBuyVowel.innerHTML = 'Buy Vowel';
 
 let btnSolvePuzzle = document.createElement('button');
-btnSolvePuzzle.setAttribute('id', 'btn-solve-puzzle');    
-btnSolvePuzzle.innerHTML = 'Solve It!';
+    btnSolvePuzzle.setAttribute('id', 'btn-solve-puzzle');    
+    btnSolvePuzzle.innerHTML = 'Solve It!';
 
 let btnExitGame = document.createElement('button');
-btnExitGame.setAttribute('id', 'btn-exit-game');  
-btnExitGame.innerHTML = 'Exit Game';   
+    btnExitGame.setAttribute('id', 'btn-exit-game');  
+    btnExitGame.innerHTML = 'Exit Game';   
 
 playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
 
@@ -93,24 +104,72 @@ function initPlayer() {
 
 }
 
+
+function isVowelOrConsonant(input) {
+    if (vowelsRegex.test(input) === true) {
+        return 'vowel';
+    } else if (consonantsRegex.test(input) === true) {
+        return 'consonant';
+    } else {
+        return false;
+    }
+
+}
+
+function checkIfExist(array, input) {
+    let count = 0;
+    array.forEach((element) => {
+        if (input === element) {
+            count += 1;
+        }
+    })
+
+    if (count > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Check if input letter is repeated in array
+function checkIfUnique(array, input) {
+    let count = 0;
+
+    if (array !== []) {
+        array.forEach((element) => {
+            if (input === element) {
+                count += 1;
+            }
+        })
+
+        if (count === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
 // To update function later & hide letters
 // Review no. of variables declared later
+// Store puzzle consonants & vowels in separate array
 function initPuzzle() {
 
     let randNum = Math.floor(Math.random() * puzzleArray.length);
-    puzzleCurrent = puzzleArray[randNum];
-    console.log(puzzleCurrent);
+    puzzleCurrent.text = puzzleArray[randNum];
+    console.log(puzzleCurrent.text);
 
     let puzzleDiv = document.createElement('div');
 
     // Generate squares for each letter
-    let puzzleSplit = puzzleCurrent.split('');
-    puzzleSplit.forEach((element) => {
+    // puzzleCurrent.split = puzzleCurrent.split('');
+    puzzleCurrent.splitText = puzzleCurrent.text.toLowerCase().split('');
+    puzzleCurrent.splitText.forEach((element) => {
         // console.log(element);
         let sqDiv = document.createElement('div');
-        sqDiv.setAttribute('class', 'square-box');
-
         let letter = document.createTextNode(element);
+        sqDiv.setAttribute('class', 'square-box');
         sqDiv.append(letter);
 
         if (element === ' ') {
@@ -120,8 +179,23 @@ function initPuzzle() {
             sqDiv.classList.add('class', 'square-text');
         }
         puzzleDiv.append(sqDiv);
+
+        // Check if letter is vowel or consonant
+        let letterCheck = isVowelOrConsonant(element);
+        let isVowelUnique = checkIfUnique(puzzleCurrent.vowels, element);
+        let isConsonantUnique = checkIfUnique(puzzleCurrent.consonants, element);
+        if (letterCheck === 'vowel' && isVowelUnique === true) {
+            puzzleCurrent.vowels.push(element);
+
+        } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+            puzzleCurrent.consonants.push(element);
+
+        }
+
     })
     puzzleBoard.append(puzzleDiv);
+    console.log('Current Puzzle (vowels): ' + puzzleCurrent.vowels);
+    console.log('Current Puzzle (consonants): ' + puzzleCurrent.consonants);
 
 }
 
@@ -155,83 +229,102 @@ function spinWheel() {
 
 }
 
-function isVowelOrConsonant(input) {
-    if (vowelsRegex.test(input)) {
-        return 'vowel';
-    } else if (consonantsRegex.test(input)) {
-        return 'consonant';
-    } else {
-        return false;
-    }
 
-}
 
 // Validate user input later for other char #$%$#^%. 
 // Also change to lowercase
 function guessLetter() {
-    let letter = prompt('Guess a letter (consonant)');
+    let input = prompt('Guess a letter (consonant)');
+    let letter = input.toLowerCase();
+    console.log('Current guess: ' + letter);
     let letterCheck = isVowelOrConsonant(letter);
+    let doesLetterExist = checkIfExist(puzzleCurrent.consonants, letter);
+    let isLetterUnique = checkIfUnique(guessLettersCurrent.consonants, letter);
 
     // Validate player input
     if (letter === "") {
         let errorMsg = 'GAME OVER: You did not enter a letter!';
         exitMsg(errorMsg);
 
-    } else if (letterCheck === false || letterCheck === 'vowel'){
+    } // Check for vowels or special char
+    else if (letterCheck === false || letterCheck === 'vowel'){
         let errorMsg = 'GAME OVER: You entered an invalid letter!';
         exitGame(errorMsg);
 
-    } else {
-        guessLettersCurrent.push(letter);
-        console.log('Current guess: ' + letter);
-        console.log('Guessed letters to-date: ' + guessLettersCurrent);
+    } // Check if consonant
+    else if (letterCheck === 'consonant') {
+        console.log('you entered a consonant');
 
-        // check if letter is a consonant
-        if (letterCheck === 'consonant') {
-            console.log('you entered a consonant');
+        // Check if letter exists in puzzle
+        if (doesLetterExist ===  true) {
 
-            // then check if consonant exists in current puzzle
-            // if () {
-            // } 
+            // Check if letter has been guessed before
+            if (isLetterUnique === true) {
+                guessLettersCurrent.consonants.push(letter);
+                console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
 
+            } else {
+                let errorMsg = 'GAME OVER: You entered a repeated consonant.';
+                exitGame(errorMsg);  
+            }
+ 
         } else {
-            let errorMsg = 'GAME OVER: You entered a vowel instead of a consonant.';
+            let errorMsg = 'GAME OVER: No such consonant in puzzle.';
             exitGame(errorMsg);
-
         }
 
     }
 
-
-}
+} // END of function guessLetter
 
 
 // Validate user input later
+// Also change to lowercase
 function buyVowel() {
 
     // Cost of each vowel = $250
     if (playerCurrent.earnedCurrent >= 250) {
-        let letter = prompt('Guess a letter (vowel)');
+        let input = prompt('Guess a letter (vowel)');
+        let letter = input.toLowerCase();
+        console.log('Current guess: ' + letter);
+        let letterCheck = isVowelOrConsonant(letter);
+        let doesLetterExist = checkIfExist(puzzleCurrent.vowels, letter);
+        let isLetterUnique = checkIfUnique(guessLettersCurrent.vowels, letter);
 
-        // check if letter is a vowel first
-        let vowelCheck = isVowelOrConsonant(letter);
-        if (vowelCheck === 'vowel') {
+        // Validate player input
+        if (letter === "") {
+            let errorMsg = 'GAME OVER: You did not enter a letter!';
+            exitMsg(errorMsg);
+
+        } // Check for consonants or special char
+        else if (letterCheck === false || letterCheck === 'consonant'){
+            let errorMsg = 'GAME OVER: You entered an invalid letter!';
+            exitGame(errorMsg);
+
+        } // Check if vowel
+        else if (letterCheck === 'vowel') {
             console.log('you entered a vowel');
 
-            // then check if vowel exists in current puzzle
-            // if () {
+            // Check if letter exists in puzzle
+            if (doesLetterExist ===  true) {
 
-            // } 
+                // Check if letter has been guessed before
+                if (isLetterUnique === true) {
+                    guessLettersCurrent.vowels.push(letter);
+                    console.log('Guessed consonants to-date: ' + guessLettersCurrent.vowels);
 
-        } else {
-            let errorMsg = 'GAME OVER: You entered a consonant instead of a vowel.'
-            exitGame(errorMsg);
+                } else {
+                    let errorMsg = 'GAME OVER: You entered a repeated vowel.';
+                    exitGame(errorMsg);  
+                }
+    
+            } else {
+                let errorMsg = 'GAME OVER: No such vowel in puzzle.';
+                exitGame(errorMsg);
+            }
+
         }
 
-
-    } else {
-        let errorMsg = 'GAME OVER: Sorry, you do not have sufficient money to buy a vowel.';
-        exitGame(errorMsg);
     }
 
 }
@@ -244,7 +337,7 @@ function solvePuzzle() {
 
     let answer = prompt('Type the puzzle answer below');
 
-    if (answer === puzzleCurrent) {
+    if (answer === puzzleCurrent.text) {
         if (playerCurrent.earnedCurrent === 0) {
             playerCurrent.earnedCurrent = 1000; // minimum earnings
         }
@@ -265,21 +358,23 @@ function checkIfExit() {
 
     let checkMsg = prompt(playerCurrent.name + ', are you sure you want to exit?');
     if (checkMsg === 'y') {
-        exitGame();
+        exitGame('default');
+    } else {
+        return
     }
 
 }
 
 function exitGame(msg) {
 
-    if (msg !== "") {
-        console.log(msg);
-        alert(msg);
-
-    } else {
+    if (msg === 'default') {
         let exitMsg = 'Bye ' + playerCurrent.name + '! See you next time!';
         console.log(exitMsg);
         alert(exitMsg);
+
+    } else {
+        console.log(msg);
+        alert(msg);
     
     }
 
@@ -292,8 +387,15 @@ function exitGame(msg) {
         earnedCurrent: 0  // for current game only
     }
 
+    let puzzleReset = {
+        text: "",
+        split: [],
+        vowels: [],
+        consonants: []
+    };
+
     playerCurrent = playerReset;
-    puzzleCurrent = "";
+    puzzleCurrent = puzzleReset;
     guessLettersCurrent = [];
 
 }
@@ -303,6 +405,7 @@ function exitGame(msg) {
 
 initPlayer();
 initPuzzle();
+
 
 btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
@@ -323,9 +426,3 @@ btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
     checkIfExit();
 })
-
-
-
-
-
-
