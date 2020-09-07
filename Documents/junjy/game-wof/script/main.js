@@ -2,10 +2,10 @@
 // SEIF3 - PROJECT #1 - WOF
 // console.log('linked');
 
-// 4.1 Update letter count & earnings
+// - Update letter count & earnings
 
 // **COMMIT WORK:-**
-// "Commit #5: Update solve puzzle/buy vowel functions: if guess correct, check letter count & earnings"   
+// "Commit #5: Update guess letter/buy vowel functions: if guess correct, check letter count & earnings" 
 
 
 //--------- PUZZLE & WHEEL SETUP ---------//
@@ -15,7 +15,6 @@ const wheelBoard = document.querySelector('#wheel-board');
 const playerStand = document.querySelector('#player-stand');
 const scoreBoard = document.querySelector('#score-board');
 
-// Recheck regex
 const vowelsRegex = /^[aeiou]$/i; 
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 
@@ -24,6 +23,7 @@ const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE 
 
 //To update values later. Note 18 so far
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
+const vowelCost = 250;
 
 // Initialize player data
 let playerCurrent = {
@@ -68,37 +68,11 @@ let btnExitGame = document.createElement('button');
 playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
 
 
-//--------- MAIN BOARD & PLAYER SETUP ---------//
-// 1. Start New Game
-// 2. Initialize Player (single-player)
-// 3. Initialize Puzzle
-
-
-// Add function later
-function startNewGame() {
-
-
-
-}
-
-// Refine playerstand setup and CSS later
-// Improve validate user input prompt
-function initPlayer() {
-
-    playerCurrent.name = prompt('Please enter your name');
-    if (playerCurrent.name === "") {
-        alert("Name must not be empty");
-        return
-
-    } else {
-        let playerDiv = document.createElement('div');
-        let playerInfo = document.createTextNode(`Player Name: ${playerCurrent.name}, Current Earnings: ${playerCurrent.earnedCurrent}`);
-        playerDiv.append(playerInfo);
-        playerStand.prepend(playerDiv);
-
-    }
-
-}
+//--------- CHECK LETTER FUNCTIONS ---------//
+// 1. Check vowel, consonant or other
+// 2. Check if letter exists in array
+// 3. Check if letter is unique/not repeated
+// 4. Check letter count in puzzle
 
 
 function isVowelOrConsonant(input) {
@@ -112,6 +86,7 @@ function isVowelOrConsonant(input) {
 
 }
 
+// refine function later
 function checkIfLetterExist(array, input) {
     let count = 0;
     array.forEach((element) => {
@@ -146,6 +121,53 @@ function checkIfLetterUnique(array, input) {
     }
 
 }
+
+function letterCount(array, input) {
+    let count = 0;
+
+    array.forEach((element) => {
+        if (input === element) {
+            count += 1;
+        }
+    })
+    return count;
+}
+
+
+
+//--------- MAIN BOARD & PLAYER SETUP ---------//
+// 1. Start New Game
+// 2. Initialize Player (single-player)
+// 3. Initialize Puzzle
+
+
+// Add function later
+function startNewGame() {
+
+
+
+}
+
+// Refine playerstand setup and CSS later
+// Improve validate user input prompt
+function initPlayer() {
+
+    playerCurrent.name = prompt('Please enter your name');
+    if (playerCurrent.name === "") {
+        alert("Name must not be empty");
+        return
+
+    } else {
+        let playerDiv = document.createElement('div');
+        let playerInfo = document.createTextNode(`Player Name: ${playerCurrent.name}`);
+        let playerEarnings = document.createTextNode(`Current Earnings: ${playerCurrent.earnedCurrent}`);
+        playerDiv.append(playerInfo, lineBreak, playerEarnings);
+        playerStand.prepend(playerDiv);
+
+    }
+
+}
+
 
 // To update function later & hide letters
 // Review no. of variables declared later
@@ -195,6 +217,14 @@ function initPuzzle() {
 
 }
 
+// dynamically update earnings onscreen
+function updatePlayerEarnings() {
+
+
+
+}
+
+
 //--------- PLAYER FUNCTIONS ---------//
 // 1. Spin Wheel
 // 2. Guess Letter
@@ -216,7 +246,7 @@ function spinWheel() {
     console.log('Current spin: ' + spinValueCurrent)
 
     if (spinValueCurrent != 'BANKRUPT') {
-        guessLetter();
+        guessLetter(spinValueCurrent);
 
     } else {
         let errorMsg = "GAME OVER: Sorry, you spinned BANKRUPT. Better luck next time!";
@@ -227,13 +257,14 @@ function spinWheel() {
 
 
 
-// Validate user input later for other char #$%$#^%. 
-// Also change to lowercase
-function guessLetter() {
+
+function guessLetter(spinValue) {
     let input = prompt('Guess a letter (consonant)');
     let letter = input.toLowerCase();
     console.log('Current guess: ' + letter);
+
     let letterCheck = isVowelOrConsonant(letter);
+    // consider condense into if statement
     let doesLetterExist = checkIfLetterExist(puzzleCurrent.consonants, letter);
     let isLetterUnique = checkIfLetterUnique(guessLettersCurrent.consonants, letter);
 
@@ -256,8 +287,16 @@ function guessLetter() {
 
             // Check if letter has been guessed before
             if (isLetterUnique === true) {
+                
+                let numLetters = letterCount(puzzleCurrent.splitText, letter);
+                
                 guessLettersCurrent.consonants.push(letter);
+                console.log('No. of consonants: ' + numLetters);
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
+
+                // update player earnings
+                playerCurrent.earnedCurrent += spinValue * numLetters;
+                console.log('Current Earnings: ' + playerCurrent.earnedCurrent);
 
             } else {
                 let errorMsg = 'GAME OVER: You entered a repeated consonant.';
@@ -274,16 +313,17 @@ function guessLetter() {
 } // END of function guessLetter
 
 
-// Validate user input later
-// Also change to lowercase
 function buyVowel() {
 
-    // Cost of each vowel = $250
+    // Check if earnings > 250
     if (playerCurrent.earnedCurrent >= 250) {
         let input = prompt('Guess a letter (vowel)');
         let letter = input.toLowerCase();
         console.log('Current guess: ' + letter);
+
         let letterCheck = isVowelOrConsonant(letter);
+
+        // consider condense into if statement
         let doesLetterExist = checkIfLetterExist(puzzleCurrent.vowels, letter);
         let isLetterUnique = checkIfLetterUnique(guessLettersCurrent.vowels, letter);
 
@@ -306,8 +346,14 @@ function buyVowel() {
 
                 // Check if letter has been guessed before
                 if (isLetterUnique === true) {
+
                     guessLettersCurrent.vowels.push(letter);
-                    console.log('Guessed consonants to-date: ' + guessLettersCurrent.vowels);
+                    console.log('No. of vowels: ' + letterCount(puzzleCurrent.splitText, letter));
+                    console.log('Guessed vowels to-date: ' + guessLettersCurrent.vowels);
+
+                    // update player earnings
+                    playerCurrent.earnedCurrent -= vowelCost;
+                    console.log('Current Earnings: ' + playerCurrent.earnedCurrent);
 
                 } else {
                     let errorMsg = 'GAME OVER: You entered a repeated vowel.';
@@ -401,6 +447,8 @@ function exitGame(msg) {
 
 initPlayer();
 initPuzzle();
+// console.log(letterCount(puzzleCurrent.splitText, 't'));
+// console.log(letterCount(puzzleCurrent.splitText, 'a'));
 
 
 btnSpinWheel.addEventListener('click', (event) => {
