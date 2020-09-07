@@ -2,14 +2,10 @@
 // SEIF3 - PROJECT #1 - WOF
 // console.log('linked');
 
-// 3. **Option B: Buy A Vowel** 
-//     - (N.A. for 1st round)
-//     - Check if have sufficient money
-//     - If have, input vowel
-//         If input correct, to continue spin wheel 
+// 4.1 Update letter count & earnings
 
 // **COMMIT WORK:-**
-// "Commit #3: Set up user-buy vowel function"
+// "Commit #5: Update solve puzzle/buy vowel functions: if guess correct, check letter count & earnings"   
 
 
 //--------- PUZZLE & WHEEL SETUP ---------//
@@ -116,7 +112,7 @@ function isVowelOrConsonant(input) {
 
 }
 
-function checkIfExist(array, input) {
+function checkIfLetterExist(array, input) {
     let count = 0;
     array.forEach((element) => {
         if (input === element) {
@@ -132,7 +128,7 @@ function checkIfExist(array, input) {
 }
 
 // Check if input letter is repeated in array
-function checkIfUnique(array, input) {
+function checkIfLetterUnique(array, input) {
     let count = 0;
 
     if (array !== []) {
@@ -182,8 +178,8 @@ function initPuzzle() {
 
         // Check if letter is vowel or consonant
         let letterCheck = isVowelOrConsonant(element);
-        let isVowelUnique = checkIfUnique(puzzleCurrent.vowels, element);
-        let isConsonantUnique = checkIfUnique(puzzleCurrent.consonants, element);
+        let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
+        let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
         if (letterCheck === 'vowel' && isVowelUnique === true) {
             puzzleCurrent.vowels.push(element);
 
@@ -238,8 +234,8 @@ function guessLetter() {
     let letter = input.toLowerCase();
     console.log('Current guess: ' + letter);
     let letterCheck = isVowelOrConsonant(letter);
-    let doesLetterExist = checkIfExist(puzzleCurrent.consonants, letter);
-    let isLetterUnique = checkIfUnique(guessLettersCurrent.consonants, letter);
+    let doesLetterExist = checkIfLetterExist(puzzleCurrent.consonants, letter);
+    let isLetterUnique = checkIfLetterUnique(guessLettersCurrent.consonants, letter);
 
     // Validate player input
     if (letter === "") {
@@ -288,8 +284,8 @@ function buyVowel() {
         let letter = input.toLowerCase();
         console.log('Current guess: ' + letter);
         let letterCheck = isVowelOrConsonant(letter);
-        let doesLetterExist = checkIfExist(puzzleCurrent.vowels, letter);
-        let isLetterUnique = checkIfUnique(guessLettersCurrent.vowels, letter);
+        let doesLetterExist = checkIfLetterExist(puzzleCurrent.vowels, letter);
+        let isLetterUnique = checkIfLetterUnique(guessLettersCurrent.vowels, letter);
 
         // Validate player input
         if (letter === "") {
