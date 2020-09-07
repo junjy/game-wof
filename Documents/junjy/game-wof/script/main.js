@@ -32,7 +32,6 @@ let playerCurrent = {
     earnedCurrent: 0 // for current game only
 }
 
-// let puzzleCurrent = [];
 let puzzleCurrent = {
     text: "",
     split: [],
@@ -64,6 +63,10 @@ let btnSolvePuzzle = document.createElement('button');
 let btnExitGame = document.createElement('button');
     btnExitGame.setAttribute('id', 'btn-exit-game');  
     btnExitGame.innerHTML = 'Exit Game';   
+
+let btnNewGame = document.createElement('button');
+    btnNewGame.setAttribute('id', 'btn-new-game');
+    btnNewGame.innerHTML = 'Start New Game';
 
 playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
 
@@ -365,6 +368,10 @@ function buyVowel() {
 
         }
 
+    } else {
+        let errorMsg = 'GAME OVER: Sorry, you do not have enough money to buy a vowel.';
+        exitGame(errorMsg);
+
     }
 
 } // END of function buyVowel
@@ -405,7 +412,7 @@ function solvePuzzle() {
 }
 
 // validate user input or insert Y/N buttons
-function checkIfExit() {
+function checkIfExitGame() {
 
     let checkMsg = prompt(playerCurrent.name + ', are you sure you want to exit?');
     if (checkMsg === 'y') {
@@ -418,6 +425,14 @@ function checkIfExit() {
 
 function exitGame(msg) {
 
+    // clear UI later & show new game btn
+    btnSpinWheel.remove();
+    btnBuyVowel.remove();
+    btnSolvePuzzle.remove();
+    btnExitGame.remove();
+    playerStand.append(btnNewGame);
+    
+
     if (msg === 'default') {
         let exitMsg = 'Bye ' + playerCurrent.name + '! See you next time!';
         console.log(exitMsg);
@@ -428,8 +443,6 @@ function exitGame(msg) {
         alert(msg);
     
     }
-
-    // clear UI later
 
     // reset player data
     let playerReset = {
@@ -460,6 +473,12 @@ initPuzzle();
 // console.log(letterCount(puzzleCurrent.splitText, 'a'));
 
 
+// to update UI & function later
+btnNewGame.addEventListener('click', (event) => {
+    console.log('start new game btn clicked');
+
+})
+
 btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
     spinWheel();
@@ -477,5 +496,5 @@ btnSolvePuzzle.addEventListener('click', (event) => {
 
 btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
-    checkIfExit();
+    checkIfExitGame();
 })
