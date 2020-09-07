@@ -323,7 +323,7 @@ function buyVowel() {
 
     }
 
-}
+} // END of function buyVowel
 
 
 // OK button gives default correct answer: to check!!!
