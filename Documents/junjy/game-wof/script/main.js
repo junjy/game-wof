@@ -2,18 +2,33 @@
 // SEIF3 - PROJECT #1 - WOF
 // console.log('linked');
 
-// - Update letter count & earnings
+// 7. Set up user progress board and messages
+//     - dynamically update earnings onscreen
+//     - 'no such letter/vowel', 'bankrupt', 'Congrats! You've won $XXX!' etc.
+//     - consider contain msgs in array or object
 
 // **COMMIT WORK:-**
-// "Commit #5: Update guess letter/buy vowel functions: if guess correct, check letter count & earnings" 
+// "Commit #9: Set up user progress message board"
 
 
 //--------- PUZZLE & WHEEL SETUP ---------//
 
+// Set up board
+// Set up msg board later
 const puzzleBoard = document.querySelector('#puzzle-board');
 const wheelBoard = document.querySelector('#wheel-board');
 const playerStand = document.querySelector('#player-stand');
 const scoreBoard = document.querySelector('#score-board');
+
+const puzzleDiv = document.querySelector('#puzzle-div');
+const wheelDiv = document.querySelector('#wheel-div');
+const playerDiv = document.querySelector('#player-div');
+const scoreDiv = document.querySelector('#score-div');
+
+// let puzzleDiv = document.createElement('div');
+// let wheelDiv = document.createElement('div');
+// let playerDiv = document.createElement('div');
+
 
 const vowelsRegex = /^[aeiou]$/i; 
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
@@ -45,6 +60,26 @@ let guessLettersCurrent = {
     consonants: []
 };
 
+// Reset player data for subseq games
+const playerReset = {
+    name: "",
+    earnedTotal: 0,   // total for all games
+    earnedCurrent: 0  // for current game only
+}
+
+const puzzleReset = {
+    text: "",
+    split: [],
+    vowels: [],
+    consonants: []
+};
+
+const guessLettersCurrentReset = {
+    vowels: [],
+    consonants: []
+};
+
+// Set up player stand - TBC
 
 // Set up buttons 1.Spin Wheel 2.Buy a vowel 3.Solve It! 4.Exit Game
 let lineBreak = document.createElement('br');
@@ -144,26 +179,29 @@ function letterCount(array, input) {
 // 3. Initialize Puzzle
 
 
-// Add function later
-function startNewGame() {
 
-
-
-}
-
+// Remove previous player info
 // Refine playerstand setup and CSS later
 // Improve validate user input prompt
-function initPlayer() {
+function initPlayer(name) {
+
+    // remove previous player info
+    playerCurrent = playerReset;
+    guessLettersCurrent = guessLettersCurrentReset;
 
     playerCurrent.name = prompt('Please enter your name');
+
     if (playerCurrent.name === "") {
         alert("Name must not be empty");
         return
 
     } else {
-        let playerDiv = document.createElement('div');
+
         let playerInfo = document.createTextNode(`Player Name: ${playerCurrent.name}`);
         let playerEarnings = document.createTextNode(`Current Earnings: ${playerCurrent.earnedCurrent}`);
+        // playerInfo.setAttribute('id', 'player-info');
+        // playerEarnings.setAttribute('id', 'player-earnings');
+
         playerDiv.append(playerInfo, lineBreak, playerEarnings);
         playerStand.prepend(playerDiv);
 
@@ -171,21 +209,21 @@ function initPlayer() {
 
 }
 
-
+// Remove previous puzzle
 // To update function later & hide letters
 // Review no. of variables declared later
 // Store puzzle consonants & vowels in separate array
 function initPuzzle() {
 
+    // Remove previous puzzle ---->
+    puzzleCurrent = puzzleReset;
+
     let randNum = Math.floor(Math.random() * puzzleArray.length);
     puzzleCurrent.text = puzzleArray[randNum];
-    console.log(puzzleCurrent.text);
-
-    let puzzleDiv = document.createElement('div');
+    puzzleCurrent.splitText = puzzleCurrent.text.toLowerCase().split('');
+    // console.log(puzzleCurrent.text);
 
     // Generate squares for each letter
-    // puzzleCurrent.split = puzzleCurrent.split('');
-    puzzleCurrent.splitText = puzzleCurrent.text.toLowerCase().split('');
     puzzleCurrent.splitText.forEach((element) => {
         // console.log(element);
         let sqDiv = document.createElement('div');
@@ -220,6 +258,19 @@ function initPuzzle() {
 
 }
 
+
+// Refine function later
+function startNewGame() {
+
+    btnNewGame.remove();
+        
+    initPlayer();
+    initPuzzle();
+    playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+
+}
+
+
 // dynamically update earnings onscreen
 function updatePlayerEarnings() {
 
@@ -236,11 +287,13 @@ function updatePlayerEarnings() {
 // 5. Exit Game
 
 
+// Remove previous wheel values
 // To upgrade spin wheel function later
 function spinWheel() {
 
+    // Remove previous wheel values
+    
     let randNum = Math.floor(Math.random() * wheelValues.length);
-    let wheelDiv = document.createElement('div');
     let spinValueCurrent = wheelValues[randNum];
     let wheelText = document.createTextNode(spinValueCurrent);    
 
@@ -425,13 +478,22 @@ function checkIfExitGame() {
 
 function exitGame(msg) {
 
-    // clear UI later & show new game btn
+    // clear UI later
     btnSpinWheel.remove();
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
     btnExitGame.remove();
-    playerStand.append(btnNewGame);
+    wheelDiv.innerHTML = "";
+    playerDiv.innerHTML = "";
+
+    let puzzlePrev = document.querySelectorAll('.square-box');
+    for (let i = 0; i < puzzlePrev.length; i++) {
+        puzzlePrev[i].remove();
+
+    }
     
+    // show new game btn
+    playerStand.append(btnNewGame);
 
     if (msg === 'default') {
         let exitMsg = 'Bye ' + playerCurrent.name + '! See you next time!';
@@ -444,43 +506,25 @@ function exitGame(msg) {
     
     }
 
-    // reset player data
-    let playerReset = {
-        name: "",
-        earnedTotal: 0,   // total for all games
-        earnedCurrent: 0  // for current game only
-    }
-
-    let puzzleReset = {
-        text: "",
-        split: [],
-        vowels: [],
-        consonants: []
-    };
-
-    playerCurrent = playerReset;
-    puzzleCurrent = puzzleReset;
-    guessLettersCurrent = [];
-
 }
 
 
 //--------- INITIALIZE NEW GAME ---------//
 
-initPlayer();
-initPuzzle();
-// console.log(letterCount(puzzleCurrent.splitText, 't'));
-// console.log(letterCount(puzzleCurrent.splitText, 'a'));
+startNewGame();
+// initPlayer();
+// initPuzzle();
 
 
 // to update UI & function later
 btnNewGame.addEventListener('click', (event) => {
     console.log('start new game btn clicked');
-
+    startNewGame();
 })
 
 btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
+    wheelDiv.innerHTML = "";
     spinWheel();
 })
 
