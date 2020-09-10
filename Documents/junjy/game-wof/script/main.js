@@ -27,8 +27,11 @@ const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE 
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
 const vowelCost = 250;
 
-// const timer = 5;
-// const timerSolve = 10;
+let countdownTimer; // for checkTime function
+const timerBtn = 8; // timer to select buttons
+const timerLetter = 5;
+const timerSolve = 10;
+
 // To check if needed
 let tempInput = ""; //for name, guess letter, vowel, puzzle
 
@@ -126,6 +129,7 @@ playerStand.append(btnNewGame);
 // add timelimit msgs later
 const msgGameOver = {
     spinBankrupt: 'GAME OVER: Sorry, you spinned BANKRUPT. Better luck next time!',
+    noInput: 'GAME OVER: You did not enter/select anything!',
     noInputLetter: 'GAME OVER: You did not enter a letter!',
     invalidLetter: 'GAME OVER: You entered an invalid letter!',
     invalidConsonant: 'GAME OVER: No such consonant in puzzle.',
@@ -145,24 +149,33 @@ const msgGameOver = {
 //--------- CHECK TIME FUNCTIONS ---------//
 
 // CHECK TIMER LATER
-// function checkTime(time) {
-//     var countdownTimer = setInterval(function(){
-//         console.log(time);
-//         timerDiv.innerHTML = time;
-//         time--;
+// Check how to stop clock after input entered
+// Check how to exitGame if time is up
+function checkTime(time) {
 
-//         if (time < 0) {
-//                 // isPlaying = false;
-//                 // checkStatus();
-//             console.log('end countdown timer');
-//             clearInterval(countdownTimer);
-//             timerDiv.innerHTML = "";
-//         }
-//     }, 1000);
+    countdownTimer = setInterval(timerDisplay, 1000);
 
-//     // console.log(timer);
-//     // timer = 5; //reset timer
-// }
+    function timerDisplay() {
+        console.log(time);
+        timerDiv.innerHTML = 'Time left: ' + time + 's';
+        time--;
+
+        if (time < 0) {
+            // isPlaying = false;
+            // checkStatus();
+            console.log('end countdown timer');
+            clearInterval(countdownTimer);
+            inputConsonant.remove();
+            timerDiv.innerHTML = "";
+
+            // update msg to be more specific later
+            exitGame(msgGameOver.noInput);
+        }
+    }
+
+    // console.log(timer);
+    // timer = 5; //reset timer
+}
 
 
 //--------- CHECK LETTER FUNCTIONS ---------//
@@ -264,6 +277,7 @@ function checkValidConsonant(spinValue, input) {
                 
                 let playerEarnings = document.querySelector('#player-earnings');
                 playerEarnings.innerHTML = 'Current Earnings: $' + playerCurrent.earnedCurrent;
+                checkTime(timerBtn);
                 
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);
@@ -316,6 +330,7 @@ function checkValidVowel(input) {
 
                 let playerEarnings = document.querySelector('#player-earnings');
                 playerEarnings.innerHTML = 'Current Earnings: $' + playerCurrent.earnedCurrent;
+                checkTime(timerBtn);
 
                 console.log('Guessed vowels to-date: ' + guessLettersCurrent.vowels);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);       
@@ -370,6 +385,7 @@ function initPlayer(name) {
 
                 initPuzzle();
                 playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+                checkTime(timerBtn);
 
                 scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '. Please select one of the buttons above to proceed.';
 
@@ -442,6 +458,11 @@ function initPuzzle() {
 
 function resetBoard() {
 
+    btnSpinWheel.remove();
+    btnBuyVowel.remove();
+    btnSolvePuzzle.remove();
+    btnExitGame.remove();
+
     inputName.remove();
     inputConsonant.remove();
     inputVowel.remove();
@@ -455,6 +476,8 @@ function resetBoard() {
     playerCurrent = playerReset;
     puzzleCurrent = puzzleReset;
     // guessLettersCurrent = guessLettersCurrentReset;
+    puzzleCurrent.vowels = [];
+    puzzleCurrent.consonants = [];
     guessLettersCurrent.consonants = [];
     guessLettersCurrent.vowels = [];
     // console.log('Guessed letters current:' + guessLettersCurrent.consonants + guessLettersCurrent.vowels);
@@ -521,11 +544,14 @@ function guessLetter(spinValue) {
 
     inputDiv.append(inputConsonant);
     inputConsonant.focus();
-    // checkTime(5);
+    checkTime(timerLetter);
 
     inputConsonant.onkeydown = function(event) {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
+
+            clearInterval(countdownTimer);
+            timerDiv.innerHTML = "";
 
             tempInput = inputConsonant.value.toUpperCase();
             console.log('Temp Input Consonant: ' + tempInput);
@@ -556,12 +582,15 @@ function buyVowel() {
 
         inputDiv.append(inputVowel);
         inputVowel.focus();
-        // checkTime(5);
+        checkTime(timerLetter);
 
         inputVowel.onkeydown = function(event) {
     
             if (event.keyCode === 13) { // 13 refers to 'ENTER' key
     
+                clearInterval(countdownTimer);
+                timerDiv.innerHTML = "";
+
                 tempInput = inputVowel.value.toUpperCase();
                 console.log('Temp Input Vowel: ' + tempInput);
     
@@ -597,11 +626,14 @@ function solvePuzzle() {
 
     inputDiv.append(inputSolve);
     inputSolve.focus();
-    // checkTime(5);
+    checkTime(timerSolve);
 
     inputSolve.onkeydown = function(event) {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
+
+            clearInterval(countdownTimer);
+            timerDiv.innerHTML = "";
 
             tempInput = inputSolve.value.toUpperCase();
             console.log('Temp Input Solve: ' + tempInput);
@@ -651,10 +683,10 @@ function solvePuzzle() {
 function exitGame(msg) {
 
     // clear UI
-    btnSpinWheel.remove();
-    btnBuyVowel.remove();
-    btnSolvePuzzle.remove();
-    btnExitGame.remove();
+    // btnSpinWheel.remove();
+    // btnBuyVowel.remove();
+    // btnSolvePuzzle.remove();
+    // btnExitGame.remove();
 
     // show new game btn
     resetBoard();
@@ -689,22 +721,30 @@ btnNewGame.addEventListener('click', (event) => {
 
 btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
+    clearInterval(countdownTimer);
+    timerDiv.innerHTML = "";
     wheelDiv.innerHTML = "";
     spinWheel();
 })
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');
+    clearInterval(countdownTimer);
+    timerDiv.innerHTML = "";
     buyVowel();
 })
 
 btnSolvePuzzle.addEventListener('click', (event) => {
     console.log('solve puzzle btn clicked');
+    clearInterval(countdownTimer);
+    timerDiv.innerHTML = "";
     solvePuzzle();
 })
 
 btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
+    clearInterval(countdownTimer);
+    timerDiv.innerHTML = "";
     // checkIfExitGame();
     exitGame('default');
 })
