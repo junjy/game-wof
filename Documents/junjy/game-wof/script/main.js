@@ -21,10 +21,13 @@ const vowelsRegex = /^[aeiou]$/i;
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 
 //To update css & design later
-const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE MACADAMIA NUT COOKIES', 'DELICIOUS DECADENT DESSERTS', 'CASHING IN A HUGE STACK OF CHIPS', 'ALL-DAY SKI LIFT TICKETS', 'CASABLANCA MOROCCO', 'THE VIEW FROM THE TOP OF A MOUNTAIN', 'PERSONALIZED STATIONERY', 'ST. ELMO\'S FIRE EXTINGUISHER', 'MONKEY BUSINESS PROPOSITION', 'LIGHTS CAMERA ACTION FIGURES', 'LUNCH WILL BE SERVED POOLSIDE', 'MANDATORY MONDAY MORNING MEETING', 'MYTHOLOGICAL HERO HERCULES', 'CHARIOTS OF FIRE HYDRANTS', 'BEGINNER AND INTERMEDIATE SKI SLOPE', 'NO-PARKING & TWILIGHT ZONE', 'COMMEMORATIVE COIN COLLECTION', 'FINDERS KEEPERS LOSERS WEEPERS', 'WRITING WISH YOU WERE HERE ON A POSTCARD', 'SUGGESTION BOX OF DONUTS', 'THE PRICE IS RIGHT TO REMAIN SILENT', 'THE CONTINENT OF ANTARCTICA', 'RINGING IN THE NEW YEAR IN TIMES SQUARE', 'THESE ARE A FEW OF MY FAVORITE THINGS', 'BREAKING A NEW YEAR\'S RESOLUTION', 'STRUMMING A SONG ON A UKULELE', 'SENSATIONAL SUBMARINE SANDWICH', 'INVIGORATING MORNING SWIM'];
+// const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE MACADAMIA NUT COOKIES', 'DELICIOUS DECADENT DESSERTS', 'CASHING IN A HUGE STACK OF CHIPS', 'ALL-DAY SKI LIFT TICKETS', 'CASABLANCA MOROCCO', 'THE VIEW FROM THE TOP OF A MOUNTAIN', 'PERSONALIZED STATIONERY', 'ST. ELMO\'S FIRE EXTINGUISHER', 'MONKEY BUSINESS PROPOSITION', 'LIGHTS CAMERA ACTION FIGURES', 'LUNCH WILL BE SERVED POOLSIDE', 'MANDATORY MONDAY MORNING MEETING', 'MYTHOLOGICAL HERO HERCULES', 'CHARIOTS OF FIRE HYDRANTS', 'BEGINNER AND INTERMEDIATE SKI SLOPE', 'NO-PARKING & TWILIGHT ZONE', 'COMMEMORATIVE COIN COLLECTION', 'FINDERS KEEPERS LOSERS WEEPERS', 'WRITING WISH YOU WERE HERE ON A POSTCARD', 'SUGGESTION BOX OF DONUTS', 'THE PRICE IS RIGHT TO REMAIN SILENT', 'THE CONTINENT OF ANTARCTICA', 'RINGING IN THE NEW YEAR IN TIMES SQUARE', 'THESE ARE A FEW OF MY FAVORITE THINGS', 'BREAKING A NEW YEAR\'S RESOLUTION', 'STRUMMING A SONG ON A UKULELE', 'SENSATIONAL SUBMARINE SANDWICH', 'INVIGORATING MORNING SWIM'];
+
+const puzzleArray = ['ALL-DAY SKI LIFT TICKETS', 'ST. ELMO\'S FIRE EXTINGUISHER', 'NO-PARKING & TWILIGHT ZONE', 'BREAKING A NEW YEAR\'S RESOLUTION', 'STRUMMING A SONG ON A UKULELE', 'SENSATIONAL SUBMARINE SANDWICH', 'INVIGORATING MORNING SWIM'];
 
 //To update values later. Note 18 so far
-const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
+// const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
+const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 300, 400, 500, 600, 700, 800, 900, 1000];
 const vowelCost = 250;
 
 let countdownTimer; // for checkTime function
@@ -48,6 +51,8 @@ let puzzleCurrent = {
     vowels: [],
     consonants: []
 };
+
+let hiddenArr = [];
 
 // letters guessed for current game only
 let guessLettersCurrent = {
@@ -148,34 +153,34 @@ const msgGameOver = {
 
 //--------- CHECK TIME FUNCTIONS ---------//
 
-// CHECK TIMER LATER
+// TO SWITCH ON TIMER
 // Check how to stop clock after input entered
 // Check how to exitGame if time is up
-function checkTime(time) {
+// function checkTime(time) {
 
-    countdownTimer = setInterval(timerDisplay, 1000);
+//     countdownTimer = setInterval(timerDisplay, 1000);
 
-    function timerDisplay() {
-        console.log(time);
-        timerDiv.innerHTML = 'Time left: ' + time + 's';
-        time--;
+//     function timerDisplay() {
+//         console.log(time);
+//         timerDiv.innerHTML = 'Time left: ' + time + 's';
+//         time--;
 
-        if (time < 0) {
-            // isPlaying = false;
-            // checkStatus();
-            console.log('end countdown timer');
-            clearInterval(countdownTimer);
-            inputConsonant.remove();
-            timerDiv.innerHTML = "";
+//         if (time < 0) {
+//             // isPlaying = false;
+//             // checkStatus();
+//             console.log('end countdown timer');
+//             clearInterval(countdownTimer);
+//             inputConsonant.remove();
+//             timerDiv.innerHTML = "";
 
-            // update msg to be more specific later
-            exitGame(msgGameOver.noInput);
-        }
-    }
+//             // update msg to be more specific later
+//             exitGame(msgGameOver.noInput);
+//         }
+//     }
 
-    // console.log(timer);
-    // timer = 5; //reset timer
-}
+//     // console.log(timer);
+//     // timer = 5; //reset timer
+// }
 
 
 //--------- CHECK LETTER FUNCTIONS ---------//
@@ -263,6 +268,9 @@ function checkValidConsonant(spinValue, input) {
             if (isLetterUnique === true) {              
                 let numLetters = letterCount(puzzleCurrent.splitText, letter);
                 guessLettersCurrent.consonants.push(letter);
+
+                // update puzzle board
+                showCorrectLetters(input);
                 
                 // update player earnings
                 let thisSpin = spinValue * numLetters;
@@ -277,7 +285,7 @@ function checkValidConsonant(spinValue, input) {
                 
                 let playerEarnings = document.querySelector('#player-earnings');
                 playerEarnings.innerHTML = 'Current Earnings: $' + playerCurrent.earnedCurrent;
-                checkTime(timerBtn);
+                // checkTime(timerBtn);
                 
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);
@@ -314,6 +322,9 @@ function checkValidVowel(input) {
 
             if (isLetterUnique === true) {
 
+                // update puzzle board
+                showCorrectLetters(input);
+
                 let numLetters = letterCount(puzzleCurrent.splitText, letter);
                 guessLettersCurrent.vowels.push(letter);
 
@@ -330,7 +341,7 @@ function checkValidVowel(input) {
 
                 let playerEarnings = document.querySelector('#player-earnings');
                 playerEarnings.innerHTML = 'Current Earnings: $' + playerCurrent.earnedCurrent;
-                checkTime(timerBtn);
+                // checkTime(timerBtn);
 
                 console.log('Guessed vowels to-date: ' + guessLettersCurrent.vowels);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);       
@@ -348,8 +359,6 @@ function checkValidVowel(input) {
     }
 
 }
-
-
 
 
 //--------- MAIN GAME FUNCTIONS ---------//
@@ -385,7 +394,7 @@ function initPlayer(name) {
 
                 initPuzzle();
                 playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
-                checkTime(timerBtn);
+                // checkTime(timerBtn);
 
                 scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '. Please select one of the buttons above to proceed.';
 
@@ -422,24 +431,15 @@ function initPuzzle() {
 
     // Generate squares for each letter
     puzzleCurrent.splitText.forEach((element) => {
-        // console.log(element);
+        // console.log('element before: ' + element);
         let sqDiv = document.createElement('div');
-        let letter = document.createTextNode(element);
         sqDiv.setAttribute('class', 'square-box');
-        sqDiv.append(letter);
-
-        if (element === ' ') {
-            // console.log('space');
-            sqDiv.classList.add('class', 'square-blank');            
-        } else {
-            sqDiv.classList.add('class', 'square-text');
-        }
-        puzzleDiv.append(sqDiv);
 
         // Check if letter is vowel or consonant
         let letterCheck = isVowelOrConsonant(element);
         let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
         let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
+
         if (letterCheck === 'vowel' && isVowelUnique === true) {
             puzzleCurrent.vowels.push(element);
 
@@ -448,7 +448,43 @@ function initPuzzle() {
 
         }
 
+        // change puzzle text to hidden & store in array
+        if (element === ' ') {
+            // console.log('space');
+            element = '*'; // ADD to vert align squares
+            sqDiv.classList.add('class', 'square-blank');            
+        } else if (element === '-' || element === "'"){
+            sqDiv.classList.add('class', 'square-display');
+
+        } else {
+            element = '_'; // ADD to vert align squares
+            sqDiv.classList.add('class', 'square-text');
+        }
+
+        // console.log('element after: ' + element);
+        hiddenArr.push(element);
+
+        let letter = document.createTextNode(element);
+        sqDiv.append(letter);
+
+        puzzleDiv.append(sqDiv);
+
+        // // Check if letter is vowel or consonant
+        // let letterCheck = isVowelOrConsonant(element);
+        // let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
+        // let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
+        // if (letterCheck === 'vowel' && isVowelUnique === true) {
+        //     puzzleCurrent.vowels.push(element);
+
+        // } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+        //     puzzleCurrent.consonants.push(element);
+
+        // }
+
     })
+
+    console.log(puzzleCurrent);
+
     puzzleBoard.append(puzzleDiv);
     console.log('Current Puzzle (vowels): ' + puzzleCurrent.vowels);
     console.log('Current Puzzle (consonants): ' + puzzleCurrent.consonants);
@@ -480,6 +516,7 @@ function resetBoard() {
     puzzleCurrent.consonants = [];
     guessLettersCurrent.consonants = [];
     guessLettersCurrent.vowels = [];
+    hiddenArr = [];
     // console.log('Guessed letters current:' + guessLettersCurrent.consonants + guessLettersCurrent.vowels);
 
     // remove previous puzzle
@@ -508,6 +545,34 @@ function showMsg(input) {
 
 function resetEarnings() {
     playerCurrent.earnedCurrent = 0;
+
+}
+
+// recheck function
+// doesn't work for 'personalized stationery'
+function showCorrectLetters(letter) {
+
+    // update blank array with guessed letters
+    for (let i = 0; i < puzzleCurrent.splitText.length; i++) {
+        if (letter === puzzleCurrent.splitText[i]) {
+            hiddenArr[i] = letter;
+        }
+    };
+
+    // push updated blank array into sqDiv
+    let puzzleLength = puzzleCurrent.splitText.length;
+    for (let j = 0; j < puzzleLength; j++) {
+
+        let tempSqText = puzzleDiv.children[j].innerHTML;
+        let tempGuessArray = hiddenArr[j];
+
+        if (tempSqText !== tempGuessArray) {
+            puzzleDiv.children[j].classList.add('square-light');
+            puzzleDiv.children[j].innerHTML = hiddenArr[j];
+
+        }
+
+    }
 
 }
 
@@ -544,7 +609,7 @@ function guessLetter(spinValue) {
 
     inputDiv.append(inputConsonant);
     inputConsonant.focus();
-    checkTime(timerLetter);
+    // checkTime(timerLetter);
 
     inputConsonant.onkeydown = function(event) {
 
@@ -582,7 +647,7 @@ function buyVowel() {
 
         inputDiv.append(inputVowel);
         inputVowel.focus();
-        checkTime(timerLetter);
+        // checkTime(timerLetter);
 
         inputVowel.onkeydown = function(event) {
     
@@ -626,7 +691,7 @@ function solvePuzzle() {
 
     inputDiv.append(inputSolve);
     inputSolve.focus();
-    checkTime(timerSolve);
+    // checkTime(timerSolve);
 
     inputSolve.onkeydown = function(event) {
 
@@ -679,6 +744,7 @@ function solvePuzzle() {
 // }
 
 
+// consider not to remove puzzle at exit
 // check msg showing undefined
 function exitGame(msg) {
 
@@ -721,7 +787,7 @@ btnNewGame.addEventListener('click', (event) => {
 
 btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
-    clearInterval(countdownTimer);
+    // clearInterval(countdownTimer);
     timerDiv.innerHTML = "";
     wheelDiv.innerHTML = "";
     spinWheel();
@@ -729,21 +795,21 @@ btnSpinWheel.addEventListener('click', (event) => {
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');
-    clearInterval(countdownTimer);
+    // clearInterval(countdownTimer);
     timerDiv.innerHTML = "";
     buyVowel();
 })
 
 btnSolvePuzzle.addEventListener('click', (event) => {
     console.log('solve puzzle btn clicked');
-    clearInterval(countdownTimer);
+    // clearInterval(countdownTimer);
     timerDiv.innerHTML = "";
     solvePuzzle();
 })
 
 btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
-    clearInterval(countdownTimer);
+    // clearInterval(countdownTimer);
     timerDiv.innerHTML = "";
     // checkIfExitGame();
     exitGame('default');

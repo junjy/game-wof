@@ -1,4 +1,8 @@
 
+body {
+    text-align: center;
+
+}
 
 #puzzle-board {
 
@@ -13,16 +17,32 @@
     display: inline-block;
     text-align: center;
     background: white;
+    margin-bottom: 10px;
 }
 
 .square-text {
     background: white;
+    color: white;
     /* display: none; */
 
 }
 
+.square-display {
+    background: white;
+    color: black;
+    /* display: none; */
+
+}
+
+.square-light {
+    background: #FFDC00;
+    color: black;
+}
+
 .square-blank {
-    background: green;
+    background: #3D9970;
+    color: #3D9970;
+    /* vertical-align: super; */
 
 }
 
@@ -43,7 +63,39 @@
 }
 
 #score-board {
+    width: 500px;
+    height: 75px;
+    border: 1px solid darkslategrey;
+    text-align: center;
+    /* vertical-align: middle; */
+
+}
+
+.scoreDiv {
+    /* width: 500px;
+    height: 75px;
+    border: 1px solid darkslategrey;
+    text-align: center; */
+    /* vertical-align: middle; */
+
+}
+
+/* check if using */
 
 
+.modal-popup {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 100px;
+    display: none; /* modify to block */
+    z-index: 1;
+}
 
+.modal-popup .content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    margin: 0 auto;
 }
