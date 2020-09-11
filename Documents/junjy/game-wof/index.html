@@ -15,24 +15,39 @@
 
     <div class='modal-cover'>
         <h1>Wheel of Fortune</h1>
+        
         <div id='puzzle-board' class='container'>
             <div id='puzzle-div'></div>
         </div>
-        <div id='wheel-board' class='container'>
-            <div id='wheel-div'></div>
-        </div>
-        <div id='player-stand' class='container'>
-            <div id='player-div'></div>
+
+        <div id='section-middle' class='container'>
+            <div id='wheel-board' class='container'>
+                <!--- For Test Wheel -->
+                <div id="chart"></div>
+                <!--- END Test Wheel -->
+                <div id='wheel-div'></div>
+            </div>
+
+            <div id='player-stand' class='container'>
+                <div id='player-div'></div>
+                <div id='score-board' class='container'>
+                    <div id='score-div'></div>
+                </div>
+                <br \>
+            <div id='input-div'></div>
             <br \>
+            </div>
+
         </div>
+        
         <br />
         <div id='timer-display'></div>
-        <div id='score-board' class='container'>
+        <!-- <div id='score-board' class='container'>
             <div id='score-div'></div>
         </div>
         <br \>
         <div id='input-div'>
-        </div>
+        </div> -->
         <br \>
     </div>
     <!-- Optional JavaScript -->
@@ -41,7 +56,12 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="script/main.js"></script>
+    <script src="script/puzzles.js"></script>   
     <!-- <script src="script/test_input.js"></script> -->
     <!-- <script src="script/test_puzzle.js"></script> -->
+
+    <!---Link for test wheel-->
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="script/wheel.js"></script>
   </body>
 </html>

@@ -21,11 +21,10 @@ const vowelsRegex = /^[aeiou]$/i;
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 
 //To update css & design later
-// const puzzleArray = ['DAIRY QUEEN OF HEARTS', 'CLASH OF THE TITANS', 'CHOCOLATE MACADAMIA NUT COOKIES', 'DELICIOUS DECADENT DESSERTS', 'CASHING IN A HUGE STACK OF CHIPS', 'ALL-DAY SKI LIFT TICKETS', 'CASABLANCA MOROCCO', 'THE VIEW FROM THE TOP OF A MOUNTAIN', 'PERSONALIZED STATIONERY', 'ST. ELMO\'S FIRE EXTINGUISHER', 'MONKEY BUSINESS PROPOSITION', 'LIGHTS CAMERA ACTION FIGURES', 'LUNCH WILL BE SERVED POOLSIDE', 'MANDATORY MONDAY MORNING MEETING', 'MYTHOLOGICAL HERO HERCULES', 'CHARIOTS OF FIRE HYDRANTS', 'BEGINNER AND INTERMEDIATE SKI SLOPE', 'NO-PARKING & TWILIGHT ZONE', 'COMMEMORATIVE COIN COLLECTION', 'FINDERS KEEPERS LOSERS WEEPERS', 'WRITING WISH YOU WERE HERE ON A POSTCARD', 'SUGGESTION BOX OF DONUTS', 'THE PRICE IS RIGHT TO REMAIN SILENT', 'THE CONTINENT OF ANTARCTICA', 'RINGING IN THE NEW YEAR IN TIMES SQUARE', 'THESE ARE A FEW OF MY FAVORITE THINGS', 'BREAKING A NEW YEAR\'S RESOLUTION', 'STRUMMING A SONG ON A UKULELE', 'SENSATIONAL SUBMARINE SANDWICH', 'INVIGORATING MORNING SWIM'];
 
-const puzzleArray = ['ALL-DAY SKI LIFT TICKETS', 'ST. ELMO\'S FIRE EXTINGUISHER', 'NO-PARKING & TWILIGHT ZONE', 'BREAKING A NEW YEAR\'S RESOLUTION', 'STRUMMING A SONG ON A UKULELE', 'SENSATIONAL SUBMARINE SANDWICH', 'INVIGORATING MORNING SWIM'];
+// Transferred puzzleArray to puzzles.js
 
-//To update values later. Note 18 so far
+//To update values later
 // const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 300, 400, 500, 600, 700, 800, 900, 1000];
 const vowelCost = 250;
@@ -88,9 +87,10 @@ let btnNewGame = document.createElement('button');
     btnNewGame.setAttribute('id', 'btn-new-game');
     btnNewGame.innerHTML = 'Start New Game';
 
-let btnSpinWheel = document.createElement('button');
-    btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
-    btnSpinWheel.innerHTML = 'Spin Wheel';
+// NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
+// let btnSpinWheel = document.createElement('button');
+//     btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
+//     btnSpinWheel.innerHTML = 'Spin Wheel';
 
 let btnBuyVowel = document.createElement('button');
     btnBuyVowel.setAttribute('id', 'btn-buy-vowel');
@@ -122,7 +122,6 @@ let inputSolve = document.createElement('input');
     inputSolve.setAttribute('id', 'input-solve')
     inputSolve.setAttribute('type', 'text');
 
-playerStand.append(btnNewGame);
 
 
 // Set up message board
@@ -393,10 +392,15 @@ function initPlayer(name) {
                 inputName.remove();
 
                 initPuzzle();
-                playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+
+                //COMMENT OUT BTNSPINWHEEL IF USING WHEEL TO SPIN
+                // playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+                playerStand.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
                 // checkTime(timerBtn);
 
-                scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '. Please select one of the buttons above to proceed.';
+                // COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
+                // scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '! Please select one of the buttons below to proceed.';
+                scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '! Please spin the wheel to proceed.';
 
                 let playerInfo = document.createElement('div');
                 let playerEarnings = document.createElement('div');
@@ -411,7 +415,10 @@ function initPlayer(name) {
         
                 playerDiv.append(playerInfo, playerEarnings);
                 playerStand.append(playerDiv);
-                playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+
+                // DONT NEED 
+                // playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
+
 
             }
 
@@ -453,7 +460,7 @@ function initPuzzle() {
             // console.log('space');
             element = '*'; // ADD to vert align squares
             sqDiv.classList.add('class', 'square-blank');            
-        } else if (element === '-' || element === "'"){
+        } else if (element === '-' || element === "'" || element === '.'){
             sqDiv.classList.add('class', 'square-display');
 
         } else {
@@ -494,7 +501,7 @@ function initPuzzle() {
 
 function resetBoard() {
 
-    btnSpinWheel.remove();
+    // btnSpinWheel.remove();
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
     btnExitGame.remove();
@@ -511,6 +518,7 @@ function resetBoard() {
     // remove previous player info
     playerCurrent = playerReset;
     puzzleCurrent = puzzleReset;
+    playerCurrent.earnedCurrent = 0;
     // guessLettersCurrent = guessLettersCurrentReset;
     puzzleCurrent.vowels = [];
     puzzleCurrent.consonants = [];
@@ -531,7 +539,7 @@ function resetBoard() {
 // Refine function later
 function startNewGame() {
 
-    btnNewGame.remove();  
+    btnNewGame.remove(); 
     initPlayer();
 
 }
@@ -545,6 +553,8 @@ function showMsg(input) {
 
 function resetEarnings() {
     playerCurrent.earnedCurrent = 0;
+    let playerEarnings = document.querySelector('#player-earnings');
+    playerEarnings.innerHTML = 'Current Earnings: $' + playerCurrent.earnedCurrent;
 
 }
 
@@ -584,14 +594,23 @@ function showCorrectLetters(letter) {
 // 5. Exit Game
 
 
-// To upgrade spin wheel function later
-function spinWheel() {
+// AMENDED SPIN WHEEL FUNCTION LINKED TO WHEEL
+function spinWheel(amt) {
     
-    let randNum = Math.floor(Math.random() * wheelValues.length);
-    let spinValueCurrent = wheelValues[randNum];
-    let wheelText = document.createTextNode('Current Spin: $' + spinValueCurrent);    
+    // let randNum = Math.floor(Math.random() * wheelValues.length);
+    // let spinValueCurrent = wheelValues[randNum];
 
-    wheelDiv.append(wheelText);
+    //OR SET TO SPIN VALUE FROM WHEEL:
+    let spinValueCurrent = amt;
+    console.log('Spin Value Fr Wheel: ' + spinValueCurrent);
+
+
+    // Delay display of text until spin effect over
+    // let wheelText = document.createTextNode('Current Spin: $' + spinValueCurrent); 
+    let wheelText = document.createTextNode('Current Spin Fr Wheel: $' + spinValueCurrent);
+
+
+    // wheelDiv.append(wheelText);
     wheelBoard.append(wheelDiv);
 
     if (spinValueCurrent != 'BANKRUPT') {
@@ -603,7 +622,35 @@ function spinWheel() {
         exitGame(msgGameOver.spinBankrupt);
     }
 
+
 }
+
+// ORIGINAL SPIN WHEEL RANDOM FUNCTION
+// function spinWheel() {
+    
+//     let randNum = Math.floor(Math.random() * wheelValues.length);
+//     let spinValueCurrent = wheelValues[randNum];
+
+//     //OR SET TO SPIN VALUE FROM WHEEL:
+//     // let spinValueCurrent = spinValueFrWheel;
+
+//     let wheelText = document.createTextNode('Current Spin: $' + spinValueCurrent); 
+//     // let wheelText = document.createTextNode('Current Spin Fr Wheel: $' + spinValueCurrent);      
+
+//     wheelDiv.append(wheelText);
+//     wheelBoard.append(wheelDiv);
+
+//     if (spinValueCurrent != 'BANKRUPT') {
+//         scoreDiv.innerHTML = 'You spinned $' + spinValueCurrent + '! Guess a letter (consonant).';
+//         guessLetter(spinValueCurrent);
+
+//     } else {
+//         resetEarnings();
+//         exitGame(msgGameOver.spinBankrupt);
+//     }
+
+
+// }
 
 function guessLetter(spinValue) {
 
@@ -689,6 +736,8 @@ function buyVowel() {
 // Show earned total later
 function solvePuzzle() {
 
+    inputSolve.value = '';
+
     inputDiv.append(inputSolve);
     inputSolve.focus();
     // checkTime(timerSolve);
@@ -705,6 +754,7 @@ function solvePuzzle() {
 
             if (tempInput === '') {
                 exitGame(msgGameOver.noInputGuess);
+                inputSolve.value = '';
             }
 
             else if (tempInput !== puzzleCurrent.text) {
@@ -750,12 +800,13 @@ function exitGame(msg) {
 
     // clear UI
     // btnSpinWheel.remove();
-    // btnBuyVowel.remove();
-    // btnSolvePuzzle.remove();
-    // btnExitGame.remove();
+    btnBuyVowel.remove();
+    btnSolvePuzzle.remove();
+    btnExitGame.remove();
+    // playerCurrent.earnedCurrent = 0;
 
     // show new game btn
-    resetBoard();
+    // resetBoard();
     playerStand.append(btnNewGame);
 
     if (msg === 'default') {
@@ -776,6 +827,12 @@ function exitGame(msg) {
 }
 
 
+//--------- INITIALIZE GAME ---------//
+playerStand.append(btnNewGame);
+showMsg('Click on the "START NEW GAME" button to play');
+
+
+
 //--------- BUTTON EVENT LISTENERS ---------//
 
 // to update UI & function later
@@ -785,13 +842,14 @@ btnNewGame.addEventListener('click', (event) => {
     startNewGame();
 })
 
-btnSpinWheel.addEventListener('click', (event) => {
-    console.log('spin wheel btn clicked');
-    // clearInterval(countdownTimer);
-    timerDiv.innerHTML = "";
-    wheelDiv.innerHTML = "";
-    spinWheel();
-})
+// NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
+// btnSpinWheel.addEventListener('click', (event) => {
+//     console.log('spin wheel btn clicked');
+//     // clearInterval(countdownTimer);
+//     timerDiv.innerHTML = "";
+//     wheelDiv.innerHTML = "";
+//     spinWheel();
+// })
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');

@@ -5,8 +5,52 @@ body {
 }
 
 #puzzle-board {
+    width: 100%;
+    height: 15vh;
+    padding: 0;
+    /* margin: 0 auto; */
 
 
+}
+
+#section-middle {
+    width: 100%;
+    height: 100vh;
+    display: inline-block;
+
+}
+
+#wheel-board {
+    width: 40%;
+    
+    /* display: inline; */
+    float: left;
+    vertical-align: top;
+    /* top: 0;
+    left: 0; */
+    padding-right: 0; /* amend Bootstrap */
+    padding-left: 0; /* amend Bootstrap */
+    margin-right: 0; /* amend Bootstrap */
+    margin-left: 0; /* amend Bootstrap */
+
+}
+
+
+
+#player-stand {
+    width: 50%;
+    /* display: inline; */
+    float: right;
+    vertical-align: top;
+
+}
+
+#score-board {
+    width: 350px;
+    height: 75px;
+    border: 1px solid grey;
+    text-align: center;
+    /* vertical-align: middle; */
 
 }
 
@@ -48,28 +92,7 @@ body {
 
 
 
-#puzzle-wheel {
 
-
-
-}
-
-
-
-#player-stand {
-
-
-
-}
-
-#score-board {
-    width: 500px;
-    height: 75px;
-    border: 1px solid darkslategrey;
-    text-align: center;
-    /* vertical-align: middle; */
-
-}
 
 .scoreDiv {
     /* width: 500px;
@@ -98,4 +121,43 @@ body {
     max-width: 500px;
     padding: 30px;
     margin: 0 auto;
+}
+
+
+/* For Test Wheel */
+
+text{
+    /* font-family:Helvetica, Arial, sans-serif; */
+    font-size: 11px;
+    pointer-events:none;
+}
+#chart{
+    /* position:absolute; */
+    /* width:500px;
+    height:500px; */
+    width:300px;
+    height:300px;
+    padding: 0;
+    margin: 0;
+    float: top;
+    /* top:0;
+    left:0; */
+}
+#question{
+    position: absolute;
+    width:400px;
+    height:500px;
+    top:0;
+    left:520px;
+}
+#question h1{
+    font-size: 50px;
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    top:50%;
+    -webkit-transform:translate(0,-50%);
+            transform:translate(0,-50%);
 }
