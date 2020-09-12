@@ -1,4 +1,6 @@
 
+/* ----- FOR MAIN LAYOUT SECTIONS ----- */
+
 body {
     text-align: center;
 
@@ -9,7 +11,6 @@ body {
     height: 15vh;
     padding: 0;
     /* margin: 0 auto; */
-
 
 }
 
@@ -35,8 +36,6 @@ body {
 
 }
 
-
-
 #player-stand {
     width: 50%;
     /* display: inline; */
@@ -50,9 +49,13 @@ body {
     height: 75px;
     border: 1px solid grey;
     text-align: center;
+    color: black;
     /* vertical-align: middle; */
 
 }
+
+
+/* ----- FOR PUZZLE BOARD ----- */
 
 .square-box {
     width: 25px;
@@ -79,8 +82,10 @@ body {
 }
 
 .square-light {
-    background: #FFDC00;
+    background: white;
     color: black;
+    animation-name: light-flash;
+    animation-duration: 3s;
 }
 
 .square-blank {
@@ -90,48 +95,68 @@ body {
 
 }
 
+@keyframes light-flash {
+    0%   {background-color: yellow; color: white;}
+    50%  {background-color: yellow; color: black;} 
+    100% {background-color: white; color: black;}
+}
 
+/* ----- FOR MESSAGE BOARD DISPLAY ----- */
 
-
-
-.scoreDiv {
+/* check if needed? */
+#scoreDiv {
     /* width: 500px;
     height: 75px;
     border: 1px solid darkslategrey;
     text-align: center; */
     /* vertical-align: middle; */
+    
+}
+
+/* .msg-delay {
+    color: black;
+    animation-name: msg-delay;
+    animation-duration: 3s;
 
 }
 
+@keyframes msg-delay {
+    0%   {opacity: 0}
+    100% {opacity: 1}
+} */
+
+
+
+/* ----- FOR MODAL DISPLAY (IF USING) ----- */
+
 /* check if using */
-
-
-.modal-popup {
+/* .modal-popup {
     width: 100%;
     position: fixed;
     left: 0;
     top: 100px;
     display: none; /* modify to block */
-    z-index: 1;
-}
+    /* z-index: 1;
+} */
 
-.modal-popup .content {
+/* .modal-popup .content {
     background: white;
     width: 100%;
     max-width: 500px;
     padding: 30px;
     margin: 0 auto;
-}
+} */
 
 
-/* For Test Wheel */
+/* ----- FOR WHEEL ----- */
 
-text{
+text {
     /* font-family:Helvetica, Arial, sans-serif; */
     font-size: 11px;
     pointer-events:none;
 }
-#chart{
+
+#chart {
     /* position:absolute; */
     /* width:500px;
     height:500px; */
@@ -143,21 +168,21 @@ text{
     /* top:0;
     left:0; */
 }
-#question{
-    position: absolute;
-    width:400px;
-    height:500px;
-    top:0;
-    left:520px;
-}
-#question h1{
-    font-size: 50px;
-    font-weight: bold;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    top:50%;
-    -webkit-transform:translate(0,-50%);
-            transform:translate(0,-50%);
-}
+
+
+
+/* @keyframes flying {
+    0% {
+      transform: rotate(0deg) scale(0);
+    }
+  
+    100% {
+      transform: rotate(3600deg) scale(1);
+    }
+  }
+  
+  .newspaper {
+      /* animation: flying 3s linear 1 forwards; */
+      /* animation: flying 3s ease-in-out 1 forwards; */
+  
+  /* } */
