@@ -1,10 +1,17 @@
 // 'use strict'
-// to tidy up code later
 
 console.log('linked test_wheel.js');
 
+// to tidy up code later
+
 // Credits to SPIN WHEEL USING JS by sumeshkp18 https://codepen.io/sumeshkp18/pen/VGBPYg
-// Adapted from above with following amendments
+// Adapted from above with following amendments:
+// - Resize wheel & centre radius (done)
+// - Adjust no. of segments (done)
+// - Adjust segment colours & text values (done)
+// - Write function to extract spin value (done)
+// - Allow wheel to spin to any value (done)
+// - Align page layout for wheel & playerstand (60% done)
 
 // UPDATE: ADD GLOBAL VARIABLE
 var spinValueFrWheel;
@@ -98,6 +105,8 @@ var data = [
 //         {"label":"MOTOROLLA",  "value":9,  "question":"What are the fonts that don't have serifs at the ends of letters called?"}, //sans-serif
 //         {"label":"BMW", "value":10, "question":"With CSS selectors, what character prefix should one use to specify a class?"}
 // ];
+
+
 var svg = d3.select('#chart')
     .append("svg")
     .data([data])
@@ -118,7 +127,6 @@ var arcs = vis.selectAll("g.slice")
     .enter()
     .append("g")
     .attr("class", "slice");
-
 
 arcs.append("path")
     // UPDATE: REMOVE PERMANENT SEGMENT COLOUR
@@ -219,12 +227,26 @@ $(document).ready(function() {
                 console.log(data[picked].value)
             
                 /* Comment the below line for restrict spin to single time */
+
+                // Update: Modify to link to spinWheel function
                 // container.on("click", spin);
-                container.on("click", function(){
-                    spin();
-                    // console.log('spin value: ' + spinValueFrWheel);
-                    spinWheel(spinValueFrWheel);
-                });
+                // container.on("click", function(){
+                //     spin();
+                //     // console.log('spin value: ' + spinValueFrWheel);
+                //     spinWheel(spinValueFrWheel);
+                // });
+
+
+                // set delay to spin until letter is guessed
+                setTimeout(function() {
+
+                    container.on("click", function(){
+                        spin();
+                        // console.log('spin value: ' + spinValueFrWheel);
+                        spinWheel(spinValueFrWheel);
+                    });      
+
+                }, timerLetter * 1000)  // chk if timer sufficient
 
             });
 

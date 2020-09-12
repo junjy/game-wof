@@ -16,10 +16,12 @@ const scoreDiv = document.querySelector('#score-div');
 const inputDiv = document.querySelector('#input-div');
 const timerDiv = document.querySelector('#timer-display');
 
+const wheelImg = document.querySelector('#wheel-img');
+const wheelActual = document.querySelector('#chart');
+
 
 const vowelsRegex = /^[aeiou]$/i; 
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
-
 //To update css & design later
 
 // Transferred puzzleArray to puzzles.js
@@ -29,10 +31,14 @@ const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i;
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 300, 400, 500, 600, 700, 800, 900, 1000];
 const vowelCost = 250;
 
+
+// For Game Timer Functions
 let countdownTimer; // for checkTime function
 const timerBtn = 8; // timer to select buttons
 const timerLetter = 5;
 const timerSolve = 10;
+
+// For Msg Display Timer
 const typMsgDelay = 1000; // 1 sec
 const spinMsgDelay = 3000; // 3 sec
 const dispLetterDelay = 100; 
@@ -81,7 +87,6 @@ const guessLettersCurrentReset = {
     consonants: []
 };
 
-// Set up player stand - TBC
 
 // Set up buttons 1.Spin Wheel 2.Buy a vowel 3.Solve It! 4.Exit Game
 let lineBreak = document.createElement('br');
@@ -91,9 +96,9 @@ let btnNewGame = document.createElement('button');
     btnNewGame.innerHTML = 'Start New Game';
 
 // NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
-// let btnSpinWheel = document.createElement('button');
-//     btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
-//     btnSpinWheel.innerHTML = 'Spin Wheel';
+let btnSpinWheel = document.createElement('button');
+    btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
+    btnSpinWheel.innerHTML = 'Spin Wheel';
 
 let btnBuyVowel = document.createElement('button');
     btnBuyVowel.setAttribute('id', 'btn-buy-vowel');
@@ -130,13 +135,6 @@ let inputSolve = document.createElement('input');
     inputSolve.setAttribute('class', 'form-control');
 
 
-
-// Set up message board
-// const msgError = {
-//     1: 'Name must not be empty'
-// }
-
-
 // add timelimit msgs later
 const msgGameOver = {
     spinBankrupt: 'GAME OVER: Sorry, you spinned BANKRUPT. Better luck next time!',
@@ -152,41 +150,33 @@ const msgGameOver = {
     invalidGuess: 'GAME OVER: Sorry, wrong guess on the puzzle! Better luck next time!'
 }
 
-// const msgSuccess = {
-//     1: 'Congrats! You solved the puzzle! You\'ve earned ' + playerCurrent.earnedCurrent + ' for this game! See you again!'
-// }
-
-
 //--------- CHECK TIME FUNCTIONS ---------//
 
 // TO SWITCH ON TIMER
-// Check how to stop clock after input entered
 // Check how to exitGame if time is up
-// function checkTime(time) {
 
-//     countdownTimer = setInterval(timerDisplay, 1000);
+function checkTime(time) {
 
-//     function timerDisplay() {
-//         console.log(time);
-//         timerDiv.innerHTML = 'Time left: ' + time + 's';
-//         time--;
+    countdownTimer = setInterval(timerDisplay, 1000);
 
-//         if (time < 0) {
-//             // isPlaying = false;
-//             // checkStatus();
-//             console.log('end countdown timer');
-//             clearInterval(countdownTimer);
-//             inputConsonant.remove();
-//             timerDiv.innerHTML = "";
+    function timerDisplay() {
+        console.log(time);
+        timerDiv.innerHTML = 'Time left: ' + time + 's';
+        time--;
 
-//             // update msg to be more specific later
-//             exitGame(msgGameOver.noInput);
-//         }
-//     }
+        if (time < 0) {
+            // isPlaying = false;
+            // checkStatus();
+            console.log('end countdown timer');
+            clearInterval(countdownTimer);
+            inputConsonant.remove();
+            timerDiv.innerHTML = "";
 
-//     // console.log(timer);
-//     // timer = 5; //reset timer
-// }
+            // update msg to be more specific later
+            exitGame(msgGameOver.noInput);
+        }
+    }
+}
 
 
 //--------- CHECK LETTER FUNCTIONS ---------//
@@ -255,6 +245,31 @@ function letterCount(array, input) {
 }
 
 
+function checkNoMoreVowels() {
+    if (puzzleCurrent.vowels.length === guessLettersCurrent.vowels.length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkNoMoreConsonants() {
+    if (puzzleCurrent.consonants.length === guessLettersCurrent.consonants.length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkNoMoreLetters() {
+    if (checkNoMoreVowels() && checkNoMoreConsonants()) {
+        return true;
+
+    } else {
+        return false;
+    }
+}
+
 function checkValidConsonant(spinValue, input) {
 
     let letter = input.toUpperCase();
@@ -282,11 +297,19 @@ function checkValidConsonant(spinValue, input) {
                 let thisSpin = spinValue * numLetters;
                 playerCurrent.earnedCurrent += thisSpin;
 
-                if (numLetters === 1) {                      
-                    // scoreDiv.innerHTML = 'Current guess:  ' + letter + '.<br>There is 1 ' + letter + '.<br> You earned $' + thisSpin;
+                if (numLetters === 1) {                     
 
                     setTimeout(function() {
                         showMsg('Current guess:  ' + letter + '.<br>There is 1 ' + letter + '.<br> You earned $' + thisSpin);
+
+                        if (checkNoMoreLetters()) {
+                            winGame();
+
+                        } else if (checkNoMoreConsonants()) {
+                            scoreDiv.innerHTML += ' There are no more consonants left.';
+                        }
+                        
+                        enableButtons();
 
                     }, typMsgDelay)
                 } 
@@ -295,8 +318,16 @@ function checkValidConsonant(spinValue, input) {
                     setTimeout(function() {
                         showMsg('Current guess:  ' + letter + '.<br>There are ' + numLetters + ' ' + letter + 's.<br> You earned $' + thisSpin);
 
+                        if (checkNoMoreLetters()) {
+                            winGame();
+
+                        } else if (checkNoMoreConsonants()) {
+                            scoreDiv.innerHTML += ' There are no more consonants left.';
+                        }
+                        enableButtons();
+
                     }, typMsgDelay)
-                    // scoreDiv.innerHTML = 'Current guess:  ' + letter + '.<br>There are ' + numLetters + ' ' + letter + 's.<br> You earned $' + thisSpin;
+
                 }
                 
                 let playerEarnings = document.querySelector('#player-earnings');
@@ -350,20 +381,35 @@ function checkValidVowel(input) {
                 if (numLetters === 1) {
 
                     setTimeout(function() {
-                        showMsg('Current guess:  ' + letter + '.<br>There is 1 ' + letter + '.<br>  Deduct: $' + vowelCost);
+                        showMsg('Current guess:  ' + letter + '. There is 1 ' + letter + '.<br>Deduct: $' + vowelCost + '.');
+                       
+                        if (checkNoMoreLetters()) {
+                            winGame();
+
+                        } else if (checkNoMoreVowels()) {
+                            scoreDiv.innerHTML += ' There are no more vowels left.';
+                        }
+
+                        enableButtons();
 
                     }, typMsgDelay);
-
-                    // scoreDiv.innerHTML = 'Current guess:  ' + letter + '.<br>There is 1 ' + letter + '.<br>  Deduct: $' + vowelCost;
 
                 } else {
 
                     setTimeout(function() {
-                        showMsg('Current guess:  ' + letter + '.<br>There are ' + numLetters + ' ' + letter + 's.<br> Deduct: $' + vowelCost);
+                        showMsg('Current guess:  ' + letter + '. There are ' + numLetters + ' ' + letter + 's.<br>Deduct: $' + vowelCost + '.');
+                       
+                        if (checkNoMoreLetters()) {
+                            winGame();
+
+                        } else if (checkNoMoreVowels()) {
+                            scoreDiv.innerHTML += ' There are no more vowels left.';
+                        }
+
+
+                        enableButtons();
 
                     }, typMsgDelay)
-
-                    // scoreDiv.innerHTML = 'Current guess:  ' + letter + '.<br>There are ' + numLetters + ' ' + letter + 's.<br> Deduct: $' + vowelCost;
 
                 }
 
@@ -399,7 +445,7 @@ function checkValidVowel(input) {
 // Improve validate user input prompt
 function initPlayer(name) {
 
-    scoreDiv.innerHTML = 'Please enter your name';
+    showMsg('Please enter your name');
     inputDiv.append(inputName);
     inputName.focus();
 
@@ -412,7 +458,7 @@ function initPlayer(name) {
 
             // refine this later
             if (tempInput === '') {
-                scoreDiv.innerHTML = "Name must not be empty";
+                showMsg('Name must not be empty');
                 inputName.remove();
             }
             else {
@@ -425,11 +471,11 @@ function initPlayer(name) {
                 //COMMENT OUT BTNSPINWHEEL IF USING WHEEL TO SPIN
                 // playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
                 playerStand.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
+                wheelTurnOn();
                 // checkTime(timerBtn);
 
                 // COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
-                // scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '! Please select one of the buttons below to proceed.';
-                scoreDiv.innerHTML = 'Welcome ' + playerCurrent.name + '! Please spin the wheel to proceed.';
+                showMsg('Welcome ' + playerCurrent.name + '! Please spin the wheel to proceed.');
 
                 let playerInfo = document.createElement('div');
                 let playerEarnings = document.createElement('div');
@@ -579,12 +625,6 @@ function showMsg(input) {
 
 }
 
-// to display msg only after animation e.g wheel spin, correct letter display
-function showDelayMsg(input) {
-    scoreDiv.innerHTML = input;
-    scoreDiv.setAttribute('msg-delay');
-
-}
 
 
 function resetEarnings() {
@@ -655,6 +695,31 @@ function showAllLetters() {
 
 }
 
+
+function wheelTurnOn() {
+    wheelImg.style.display = 'none';
+    wheelActual.style.display = 'inline';
+
+}
+
+function wheelTurnOff() {
+    wheelImg.style.display = 'inline';
+    wheelActual.style.display = 'none';
+
+}
+
+function disableButtons() {
+    btnBuyVowel.remove();
+    btnSolvePuzzle.remove();
+    btnExitGame.remove();
+}
+
+function enableButtons() {
+    playerDiv.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
+
+}
+
+
 //--------- PLAYER FUNCTIONS ---------//
 // 1. Spin Wheel
 // 2. Guess Letter
@@ -664,13 +729,16 @@ function showAllLetters() {
 
 
 // AMENDED SPIN WHEEL FUNCTION LINKED TO WHEEL
-function spinWheel(amt) {
-    
+function spinWheel() {
+
+    disableButtons();
+
     // let randNum = Math.floor(Math.random() * wheelValues.length);
     // let spinValueCurrent = wheelValues[randNum];
+    
 
     //OR SET TO SPIN VALUE FROM WHEEL:
-    let spinValueCurrent = amt;
+    let spinValueCurrent = spinValueFrWheel;
     console.log('Spin Value Fr Wheel: ' + spinValueCurrent);
 
 
@@ -679,23 +747,30 @@ function spinWheel(amt) {
 
 
     // wheelDiv.append(wheelText);
-    wheelBoard.append(wheelDiv);
+    // wheelBoard.append(wheelDiv);
 
     if (spinValueCurrent != 'BANKRUPT') {
-
         // delay msg display until spin over
         setTimeout(function() {
             showMsg('You spinned $' + spinValueCurrent + '! Guess a letter (consonant).');
             guessLetter(spinValueCurrent);
-
-        }, spinMsgDelay)
-
-        // showDelayMsg('You spinned $' + spinValueCurrent + '! Guess a letter (consonant).');
-        // scoreDiv.innerHTML = 'You spinned $' + spinValueCurrent + '! Guess a letter (consonant).';
+        
+        }, spinMsgDelay);
 
     } else {
+
         resetEarnings();
-        exitGame(msgGameOver.spinBankrupt);
+        btnBuyVowel.disabled = false;
+        btnSolvePuzzle.disabled = false;
+        btnExitGame.disabled = false;
+
+        // delay msg display until spin over
+        setTimeout(function(){
+
+            exitGame(msgGameOver.spinBankrupt);
+
+        }, spinMsgDelay);
+
     }
 
 
@@ -732,6 +807,7 @@ function guessLetter(spinValue) {
 
     inputDiv.append(inputConsonant);
     inputConsonant.focus();
+
     // checkTime(timerLetter);
 
     inputConsonant.onkeydown = function(event) {
@@ -746,6 +822,7 @@ function guessLetter(spinValue) {
 
             if (tempInput === '') {
                 exitGame(msgGameOver.noInputLetter);
+
             }
             else {
 
@@ -763,6 +840,8 @@ function guessLetter(spinValue) {
 
 
 function buyVowel() {
+
+    disableButtons();
 
     // Check if earnings > 250
     if (playerCurrent.earnedCurrent >= vowelCost) {
@@ -811,6 +890,8 @@ function buyVowel() {
 // Show earned total later
 function solvePuzzle() {
 
+    disableButtons();
+
     inputSolve.value = '';
 
     inputDiv.append(inputSolve);
@@ -840,33 +921,7 @@ function solvePuzzle() {
         
             } else {
 
-                inputSolve.remove();
-
-                if (playerCurrent.earnedCurrent === 0) {
-                    playerCurrent.earnedCurrent = 1000; // min earning
-        
-                }
-        
-                playerCurrent.earnedTotal += playerCurrent.earnedCurrent;
-        
-                setTimeout(function() {
-                    
-                    // display letters on board
-                    showAllLetters();
-                    
-                    // delay display msg
-                    showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!');
-
-                    // To disable wheel from spin later
-                    btnBuyVowel.remove();
-                    btnSolvePuzzle.remove();
-                    // exitGame(successMsg);
-                    // tempInput === '';
-                    inputSolve.value = '';
-
-                }, typMsgDelay);
-
-                // let successMsg = 'Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!';
+               winGame();
 
             }
 
@@ -885,9 +940,41 @@ function solvePuzzle() {
 //     }
 // }
 
+function winGame() {
+
+    inputSolve.remove();
+
+    if (playerCurrent.earnedCurrent === 0) {
+        playerCurrent.earnedCurrent = 1000; // min earning
+
+    }
+
+    playerCurrent.earnedTotal += playerCurrent.earnedCurrent;
+
+    setTimeout(function() {
+        
+        // display letters on board
+        showAllLetters();
+        
+        // delay display msg
+        showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!');
+
+        // To disable wheel from spin later
+        // exitGame(successMsg);
+        // tempInput === '';
+        inputSolve.value = '';
+
+    }, typMsgDelay);
+
+    // let successMsg = 'Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!';
+    
+}
+
+
 
 // consider not to remove puzzle at exit
 // check msg showing undefined
+
 function exitGame(msg) {
 
     // clear UI
@@ -900,18 +987,19 @@ function exitGame(msg) {
     // show new game btn
     // resetBoard();
     playerStand.append(btnNewGame);
+    wheelTurnOff();
 
     if (msg === 'default') {
         // let exitMsg = ;
         // console.log(exitMsg);
         // alert(exitMsg);
-        scoreDiv.innerHTML = 'Bye, ' + playerCurrent.name + '! See you next time!';
+        showMsg('Bye, ' + playerCurrent.name + '! See you next time!');
 
     } 
     else {
         // console.log(msg);
         // alert(msg);
-        scoreDiv.innerHTML = msg;
+        showMsg(msg);
         resetEarnings();
     
     }
@@ -935,13 +1023,14 @@ btnNewGame.addEventListener('click', (event) => {
 })
 
 // NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
-// btnSpinWheel.addEventListener('click', (event) => {
-//     console.log('spin wheel btn clicked');
-//     // clearInterval(countdownTimer);
-//     timerDiv.innerHTML = "";
-//     wheelDiv.innerHTML = "";
-//     spinWheel();
-// })
+btnSpinWheel.addEventListener('click', (event) => {
+    console.log('spin wheel btn clicked');
+    // clearInterval(countdownTimer);
+    timerDiv.innerHTML = "";
+    wheelDiv.innerHTML = "";
+    spinWheel();
+    
+})
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');
