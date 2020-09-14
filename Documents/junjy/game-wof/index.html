@@ -6,53 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Martel+Sans:wght@700&family=Roboto&family=Roboto+Slab:wght@500&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
+
 
     <title>Wheel of Fortune</title>
   </head>
   <body>
 
     <div class='modal-cover'>
-        <h1>Wheel of Fortune</h1>
-        
-        <div id='puzzle-board' class='container'>
-            <div id='puzzle-div'></div>
+
+        <div id='intro-page'>
+            <div id='intro-logo'>wheel.of<br \>.fortune</div>
+            <div id='intro-footer'></div>
         </div>
 
-        <div id='section-middle' class='container'>
-            <div id='wheel-board' class='container'>
-                <!--- For Wheel -->
-                <div id="wheel-img"><img src="https://via.placeholder.com/300.jpg"></div> <!-- wheel img only -->
-                <div id="chart"></div> <!-- actual wheel -->
-                <!--- END Wheel -->
-
-                <!-- check if still require below wheeldiv-->
-                <div id='wheel-div'></div>
-            </div>
-
-            <div id='player-stand' class='container'>
+        <div id='game-page'>
+            <div id='section-top'>
+                <h1>wheel.of.fortune</h1>
                 <div id='timer-display'></div>
-                <div id='player-div'></div>
-                <div id='score-board' class='container'>
-                    <div id='score-div'></div>
+                <div id='progress-display'></div>
+            </div>
+
+            <div id='section-middle' class='container'>
+                <div id='puzzle-div'></div>
+
+                <div id='wheel-div'>
+                    <!--- For Wheel -->
+                    <div id="wheel-img"><img src="https://via.placeholder.com/225"></div> <!-- wheel img only -->
+                    <div id="chart"></div> <!-- actual wheel -->
+                    <!--- END Wheel -->
                 </div>
+            </div>
+                
+            <div id='section-bottom' class='container'>
+                <div id='score-div'></div>
+                <div id='input-div'></div>
+                <div id='buttons-div'></div>
                 <br \>
-            <div id='input-div'></div>
-            <br \>
             </div>
 
         </div>
-        
-        <br />
-        <!-- <div id='score-board' class='container'>
-            <div id='score-div'></div>
-        </div>
-        <br \>
-        <div id='input-div'>
-        </div> -->
-        <br \>
+
     </div>
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

@@ -2,33 +2,158 @@
 /* ----- FOR MAIN LAYOUT SECTIONS ----- */
 
 body {
+    font-family: 'Roboto', sans-serif;
     text-align: center;
 
 }
 
-#puzzle-board {
+#intro-page {
     width: 100%;
-    height: 15vh;
-    padding: 0;
-    margin-bottom: 30px;
+    display: inline;
+    
 
+}
+
+#intro-logo:before {
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    top: -40px;
+    left: -40px;
+    right: -40px;
+    bottom: -40px;
+    border: 15px solid rgb(255, 230, 150);
+    border-radius: 75px;
+    box-shadow: 5px 5px 3px grey;
+    animation-name: intro-flash-outer;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count:infinite;
+
+
+  }
+
+#intro-logo {
+    width: 50%;
+    position: relative;
+    transform: translate(50%, 50%);
+    font-family: 'Martel Sans', sans-serif;
+    /* text-shadow: 2px 2px 1px white; */
+    font-size: 75px;
+    font-weight: bolder;
+    vertical-align: middle;
+    /* border: 5px solid orange; */
+    background-color: rgb(220, 220, 220);
+    border-radius: 50px;
+    animation-name: intro-flash;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count:infinite;
+}
+
+/* To improve animation transitions */
+
+@keyframes intro-flash {
+    0%   {background-color: rgb(220, 220, 220); color: black;}
+    50%  {background-color: rgb(255, 230, 150); color: black;} 
+    100% {background-color: rgb(200, 90, 90); color: white;}
+}
+
+@keyframes intro-flash-outer {
+    0%   {border-color: rgb(255, 230, 150);}
+    50%  {border-color: rgb(220, 220, 220);} 
+    100% {border-color: rgb(220, 220, 220);}
+}
+
+
+
+#intro-footer {
+    width: 100%;
+    position: relative;
+    transform: translate(0%, 300%);
+    padding-top: 15px;
+    display: block;
+
+}
+
+
+
+#game-page {
+
+    display: none;
+
+}
+
+#section-top {
+    width: 100%;
+    height: 25vh;
+    padding: 0;
+    /* margin-bottom: 30px; */
+    padding: 25px 50px 50px 50px;
+    text-align: left;
+}
+
+#section-top h1 {
+    font-family: 'Martel Sans', sans-serif;
 }
 
 #section-middle {
     width: 100%;
-    height: 100vh;
+    display: inline-block;
+    padding-bottom: 10px;
+
+}
+
+#section-bottom {
+    width: 100%;
+    /* height: 50vh; */
     display: inline-block;
 
 }
 
-#wheel-board {
-    width: 40%;
-    
-    /* display: inline; */
+/* ----- SECTION TOP ----- */
+
+#section-top h1 {
+    width: 60%;
     float: left;
+    font-family: 'Martel Sans', sans-serif;
+}
+
+#timer-display {
+    width: 40%;
+    float: right;
+    margin-top: 15px;
+    text-align: right;
+    font-size: 12px;
+
+}
+
+#progress-display {
+    width: 40%;
+    float: right;
+    /* margin-top: 5px; */
+    text-align: right;
+    font-size: 12px;
+
+}
+
+
+/* ----- SECTION MIDDLE ----- */
+
+#puzzle-div {
+    width: 60%;
+    float: left;
+    vertical-align: middle;
+    padding-top: 50px;
+    padding-right: 50px;
+
+}
+
+
+#wheel-div {
+    width: 40%;
+    float: right;
     vertical-align: top;
-    /* top: 0;
-    left: 0; */
     padding-right: 0; /* amend Bootstrap */
     padding-left: 0; /* amend Bootstrap */
     margin-right: 0; /* amend Bootstrap */
@@ -36,24 +161,58 @@ body {
 
 }
 
-#player-stand {
-    width: 50%;
-    /* display: inline; */
-    float: right;
-    vertical-align: top;
+/* ----- SECTION BOTTOM ----- */
 
+
+#score-div:before {
+    content: open-quote;
+    font-family: 'Roboto Slab', serif;
+    margin-left: 0px;
+    /* padding-right: 20px; */
+    font-size: 35px;
+    text-align: left;
+    display: block;
+    
 }
 
-#score-board {
-    width: 350px;
-    height: 100px;
-    border: 1px solid grey;
+#score-div:after {
+    content: close-quote;
+    font-family: 'Roboto Slab', serif;
+    margin-right: 0px;
+    /* padding-left: 30px; */
+    font-size: 35px;
+    text-align: right;
+    display: block;
+}
+
+#score-div {
+    width: 40%;
+    height: 125px;
+    float: left;
+    vertical-align: top;
+    /* width: 350px; */
+    /* border: 1px solid grey; */
     text-align: center;
     color: black;
     /* vertical-align: middle; */
 
 }
 
+#input-div {
+    width: 40%;
+    float: right;
+    padding-top: 15px;
+    text-align: center;
+
+}
+
+#buttons-div {
+    width: 40%;
+    float: right;
+    margin-top: 50px;
+    text-align: center;
+
+}
 
 /* ----- FOR PUZZLE BOARD ----- */
 
@@ -61,6 +220,7 @@ body {
     width: 25px;
     height: 25px;
     border: 1px solid black;
+    border-radius: 5px;
     display: inline-block;
     text-align: center;
     background: white;
@@ -68,30 +228,32 @@ body {
 }
 
 .square-text {
-    background: white;
+    background-color: white;
     color: white;
     /* display: none; */
 
 }
 
 .square-display {
-    background: white;
+    background-color: white;
     color: black;
     /* display: none; */
 
 }
 
 .square-light {
-    background: white;
+    background-color: white;
     color: black;
     animation-name: light-flash;
     animation-duration: 3s;
 }
 
 .square-blank {
-    background: #3D9970;
-    color: #3D9970;
-    /* vertical-align: super; */
+    /* background: #3D9970;
+    color: #3D9970; */
+    background-color: white;
+    color: white;
+    border: 0px;
 
 }
 
@@ -103,15 +265,6 @@ body {
 
 /* ----- FOR MESSAGE BOARD DISPLAY ----- */
 
-/* check if needed? */
-#scoreDiv {
-    /* width: 500px;
-    height: 75px;
-    border: 1px solid darkslategrey;
-    text-align: center; */
-    /* vertical-align: middle; */
-    
-}
 
 /* .msg-delay {
     color: black;

@@ -4,25 +4,35 @@
 
 //--------- PUZZLE & WHEEL SETUP ---------//
 // Set up board
-const puzzleBoard = document.querySelector('#puzzle-board');
-const wheelBoard = document.querySelector('#wheel-board');
-const playerStand = document.querySelector('#player-stand');
-const scoreBoard = document.querySelector('#score-board');
+// const puzzleBoard = document.querySelector('#puzzle-board');
+// const wheelBoard = document.querySelector('#wheel-board');
+// const playerStand = document.querySelector('#player-stand');
+// const scoreBoard = document.querySelector('#score-board');
+
+const introPg = document.querySelector('#intro-page');
+const introFooter = document.querySelector('#intro-footer');
+
+const gamePg = document.querySelector('#game-page');
+const timerDiv = document.querySelector('#timer-display');
+const progDiv = document.querySelector('#progress-display');
 
 const puzzleDiv = document.querySelector('#puzzle-div');
 const wheelDiv = document.querySelector('#wheel-div');
-const playerDiv = document.querySelector('#player-div');
-const scoreDiv = document.querySelector('#score-div');
-const inputDiv = document.querySelector('#input-div');
-const timerDiv = document.querySelector('#timer-display');
-
 const wheelImg = document.querySelector('#wheel-img');
 const wheelActual = document.querySelector('#chart');
+// const playerDiv = document.querySelector('#player-div');
+
+const scoreDiv = document.querySelector('#score-div');
+const inputDiv = document.querySelector('#input-div');
+const buttonsDiv = document.querySelector('#buttons-div');
 
 
 const vowelsRegex = /^[aeiou]$/i; 
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 //To update css & design later
+
+// To amend later
+timerDiv.innerHTML = 'Time left: XX sec';
 
 // Transferred puzzleArray to puzzles.js
 
@@ -50,7 +60,8 @@ let tempInput = ""; //for name, guess letter, vowel, puzzle
 let playerCurrent = {
     name: "",
     earnedTotal: 0,   // total for all games
-    earnedCurrent: 0 // for current game only
+    earnedCurrent: 0, // for current game only
+    earnings: []
 }
 
 let puzzleCurrent = {
@@ -93,46 +104,51 @@ let lineBreak = document.createElement('br');
 
 let btnNewGame = document.createElement('button');
     btnNewGame.setAttribute('id', 'btn-new-game');
-    btnNewGame.innerHTML = 'Start New Game';
+    btnNewGame.innerHTML = 'startGame';
+    btnNewGame.setAttribute('class', 'btn btn-outline-success');
 
 // NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
 let btnSpinWheel = document.createElement('button');
     btnSpinWheel.setAttribute('id', 'btn-spin-wheel');
-    btnSpinWheel.innerHTML = 'Spin Wheel';
+    btnSpinWheel.innerHTML = 'spinWheel';
+    btnSpinWheel.setAttribute('class', 'btn btn-outline-success');
 
 let btnBuyVowel = document.createElement('button');
     btnBuyVowel.setAttribute('id', 'btn-buy-vowel');
-    btnBuyVowel.innerHTML = 'Buy Vowel';
+    btnBuyVowel.innerHTML = 'buyVowel';
+    btnBuyVowel.setAttribute('class', 'btn btn-outline-success');
 
 let btnSolvePuzzle = document.createElement('button');
     btnSolvePuzzle.setAttribute('id', 'btn-solve-puzzle');    
-    btnSolvePuzzle.innerHTML = 'Solve It!';
+    btnSolvePuzzle.innerHTML = 'solveIt';
+    btnSolvePuzzle.setAttribute('class', 'btn btn-outline-success');
 
 let btnExitGame = document.createElement('button');
     btnExitGame.setAttribute('id', 'btn-exit-game');  
-    btnExitGame.innerHTML = 'Exit Game';   
+    btnExitGame.innerHTML = 'exitGame';
+    btnExitGame.setAttribute('class', 'btn btn-outline-danger'); 
 
 // ------ TEST INPUT FIELD ------//
 
 let inputName = document.createElement('input');
     inputName.setAttribute('id', 'input-name')
     inputName.setAttribute('type', 'text');
-    inputName.setAttribute('class', 'form-control');
+    // inputName.setAttribute('class', 'form-control');
 
 let inputConsonant = document.createElement('input');
     inputConsonant.setAttribute('id', 'input-consonant')
     inputConsonant.setAttribute('type', 'text');
-    inputConsonant.setAttribute('class', 'form-control');
+    // inputConsonant.setAttribute('class', 'form-control');
 
 let inputVowel = document.createElement('input');
     inputVowel.setAttribute('id', 'input-vowel')
     inputVowel.setAttribute('type', 'text');
-    inputVowel.setAttribute('class', 'form-control');
+    // inputVowel.setAttribute('class', 'form-control');
 
 let inputSolve = document.createElement('input');
     inputSolve.setAttribute('id', 'input-solve')
     inputSolve.setAttribute('type', 'text');
-    inputSolve.setAttribute('class', 'form-control');
+    // inputSolve.setAttribute('class', 'form-control');
 
 
 // add timelimit msgs later
@@ -335,7 +351,7 @@ function checkValidConsonant(spinValue, input) {
                 // checkTime(timerBtn);
                 
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
-                console.log('Current Earnings: ' + playerCurrent.earnedCurrent);
+                console.log('Current Earnings: $' + playerCurrent.earnedCurrent);
 
             } else {
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
@@ -445,60 +461,61 @@ function checkValidVowel(input) {
 // Improve validate user input prompt
 function initPlayer(name) {
 
-    showMsg('Please enter your name');
-    inputDiv.append(inputName);
-    inputName.focus();
+    // showMsg('Please enter your name');
+    // inputDiv.append(inputName);
+    // inputName.focus();
 
-    inputName.onkeydown = function(event) {
+    // inputName.onkeydown = function(event) {
 
-        if (event.keyCode === 13) { // 13 refers to 'ENTER' key
+    //     if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
-            tempInput = inputName.value.toUpperCase();
-            console.log('Temp Input Name: ' + tempInput);
+    //         tempInput = inputName.value.toUpperCase();
+    //         console.log('Temp Input Name: ' + tempInput);
 
-            // refine this later
-            if (tempInput === '') {
-                showMsg('Name must not be empty');
-                inputName.remove();
-            }
-            else {
+    //         // refine this later
+    //         if (tempInput === '') {
+    //             showMsg('Name must not be empty');
+    //             inputName.remove();
+    //         }
+    //         else {
 
-                playerCurrent.name = tempInput;
-                inputName.remove();
+                // playerCurrent.name = tempInput;
+                // inputName.remove();
 
                 initPuzzle();
 
                 //COMMENT OUT BTNSPINWHEEL IF USING WHEEL TO SPIN
                 // playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
-                playerStand.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
+                enableButtons;
                 wheelTurnOn();
                 // checkTime(timerBtn);
 
                 // COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
-                showMsg('Welcome ' + playerCurrent.name + '! Please spin the wheel to proceed.');
+                // showMsg('Welcome ' + playerCurrent.name + '!<br> Please spin the wheel to proceed.');
+                showMsg('Welcome!<br> Please spin the wheel to proceed.');
 
                 let playerInfo = document.createElement('div');
                 let playerEarnings = document.createElement('div');
                 playerInfo.setAttribute('id', 'player-info');
                 playerEarnings.setAttribute('id', 'player-earnings');
         
-                let playerInfoText = document.createTextNode(`Player Name: ${playerCurrent.name}`);
+                // let playerInfoText = document.createTextNode(`Player Name: ${playerCurrent.name}`);
                 let playerEarningsText = document.createTextNode(`Current Earnings: $${playerCurrent.earnedCurrent}`);
         
-                playerInfo.append(playerInfoText);
+                // playerInfo.append(playerInfoText);
                 playerEarnings.append(playerEarningsText);
         
-                playerDiv.append(playerInfo, playerEarnings);
-                playerStand.append(playerDiv);
+                progDiv.append(playerInfo, playerEarnings);
+                // playerStand.append(playerDiv);
 
                 // DONT NEED 
                 // playerStand.append(btnSpinWheel, btnBuyVowel, btnSolvePuzzle, btnExitGame);
 
 
-            }
+    //         }
 
-        } 
-    }
+    //     } 
+    // }
 
 }
 
@@ -567,7 +584,7 @@ function initPuzzle() {
 
     console.log(puzzleCurrent);
 
-    puzzleBoard.append(puzzleDiv);
+    // puzzleBoard.append(puzzleDiv);
     console.log('Current Puzzle (vowels): ' + puzzleCurrent.vowels);
     console.log('Current Puzzle (consonants): ' + puzzleCurrent.consonants);
 
@@ -586,8 +603,8 @@ function resetBoard() {
     inputVowel.remove();
     inputSolve.remove();
 
-    wheelDiv.innerHTML = "";
-    playerDiv.innerHTML = "";
+    // wheelDiv.innerHTML = "";
+    progDiv.innerHTML = "";
     scoreDiv.innerHTML = "";
 
     // remove previous player info
@@ -616,6 +633,8 @@ function startNewGame() {
 
     btnNewGame.remove(); 
     initPlayer();
+    introPg.style.display = 'none';
+    gamePg.style.display = 'inline';
 
 }
 
@@ -715,7 +734,7 @@ function disableButtons() {
 }
 
 function enableButtons() {
-    playerDiv.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
+    buttonsDiv.append(btnBuyVowel, btnSolvePuzzle, btnExitGame);
 
 }
 
@@ -957,7 +976,8 @@ function winGame() {
         showAllLetters();
         
         // delay display msg
-        showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!');
+        // showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again, ' + playerCurrent.name + '!');
+        showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this game! See you again!');
 
         // To disable wheel from spin later
         // exitGame(successMsg);
@@ -986,7 +1006,7 @@ function exitGame(msg) {
 
     // show new game btn
     // resetBoard();
-    playerStand.append(btnNewGame);
+    buttonsDiv.append(btnNewGame);
     wheelTurnOff();
 
     if (msg === 'default') {
@@ -994,6 +1014,7 @@ function exitGame(msg) {
         // console.log(exitMsg);
         // alert(exitMsg);
         showMsg('Bye, ' + playerCurrent.name + '! See you next time!');
+        showMsg('Bye, see you next time!');
 
     } 
     else {
@@ -1008,8 +1029,10 @@ function exitGame(msg) {
 
 
 //--------- INITIALIZE GAME ---------//
-playerStand.append(btnNewGame);
-showMsg('Click on the "START NEW GAME" button to play');
+
+introPg.style.display = 'inline';
+introFooter.append(btnNewGame);
+// showMsg('Click on the "START NEW GAME" button to play!');
 
 
 
@@ -1027,7 +1050,7 @@ btnSpinWheel.addEventListener('click', (event) => {
     console.log('spin wheel btn clicked');
     // clearInterval(countdownTimer);
     timerDiv.innerHTML = "";
-    wheelDiv.innerHTML = "";
+    // wheelDiv.innerHTML = "";
     spinWheel();
     
 })

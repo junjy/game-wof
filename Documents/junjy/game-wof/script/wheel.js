@@ -22,8 +22,8 @@ var spinValueFrWheel;
 var padding = {top:0, right:15, bottom:0, left:0},
 
 // UPDATE: AMENDED WHEEL RADIUS
-w = 300 - padding.left - padding.right,
-h = 300 - padding.top  - padding.bottom,
+w = 225 - padding.left - padding.right,
+h = 225 - padding.top  - padding.bottom,
 r = Math.min(w, h)/2,
 rotation = 0,s
 oldrotation = 0,
@@ -338,16 +338,16 @@ svg.append("g")
     container.append("circle")
     .attr("cx", 0)
     .attr("cy", 0)
-    .attr("r", 40) // UPDATE: amend spin circle radius
+    .attr("r", 30) // UPDATE: amend spin circle radius
     .style({"fill":"white","cursor":"pointer"});
 
     //spin text
     container.append("text")
     .attr("x", 0)
-    .attr("y", 10) // UPDATE: amend text vert alignment
+    .attr("y", 5) // UPDATE: amend text vert alignment
     .attr("text-anchor", "middle")
     .text("SPIN")
-    .style({"font-weight":"bold", "font-size":"20px"}); //UPDATE: amend fontsize
+    .style({"font-weight":"bold", "font-size":"12px"}); //UPDATE: amend fontsize
 
 
 function rotTween(to) {
