@@ -5,9 +5,17 @@
 //--------- PUZZLE & WHEEL SETUP ---------//
 
 
+// For Intro Page
 const introPg = document.querySelector('#intro-page');
 const introFooter = document.querySelector('#intro-footer');
 
+// For Modal
+const modalTriggerElem = document.querySelector('.modal-trigger');
+const modalCoverElem = document.querySelector('.modal-cover');
+const modalPopUpElem = document.querySelector('.modal-popup');
+const modalCloseBtn = document.querySelector('.modal-close-btn');
+
+// For Game Page
 const gamePg = document.querySelector('#game-page');
 const timerDiv = document.querySelector('#timer-display');
 const progDiv = document.querySelector('#progress-display');
@@ -30,11 +38,8 @@ timerDiv.innerHTML = 'Time left: XX sec';
 
 // Transferred puzzleArray to puzzles.js
 
-//To update values later
-// const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 'BANKRUPT', 300, 400, 500, 600, 700, 800, 900, 1000];
 const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 300, 400, 500, 600, 700, 800, 900, 1000];
 const vowelCost = 250;
-
 
 // For Game Timer Functions
 let countdownTimer; // for checkTime function
@@ -108,6 +113,9 @@ let btnInfo = document.createElement('button');
     btnInfo.setAttribute('id', 'btn-info');
     btnInfo.innerHTML = 'howToPlay';
     btnInfo.setAttribute('class', 'btn btn-outline-warning');
+    // btnInfo.classList.add('modal-trigger');
+
+    modalCloseBtn.setAttribute('class', 'btn btn-outline-warning');
 
 // NOTE: COMMENT OUT THIS PART IF USING ACTUAL WHEEL TO SPIN
 let btnSpinWheel = document.createElement('button');
@@ -655,6 +663,7 @@ function resetBoard() {
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
     btnExitGame.remove();
+    btnInfo.remove();
 
     inputName.remove();
     inputConsonant.remove();
@@ -1030,13 +1039,15 @@ function exitGame(msg) {
 
     // clear UI
     // btnSpinWheel.remove();
+    btnNextRound.remove();
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
     btnExitGame.remove();
     // playerCurrent.earnedCurrent = 0;
 
     // resetBoard();
-    buttonsDiv.append(btnNewGame);
+    buttonsDiv.append(btnInfo, btnNewGame);
+    // buttonsDiv.append(btnNewGame);
     wheelTurnOff();
 
     if (msg === 'default') {
@@ -1107,4 +1118,25 @@ btnExitGame.addEventListener('click', (event) => {
 })
 
 
+btnInfo.addEventListener('click', (event) => {
+    console.log('info btn clicked');
 
+    modalCoverElem.style.display = 'block';
+    modalPopUpElem.style.display = 'block';
+
+})
+
+
+// Open Modal
+// modalTriggerElem.addEventListener('click', (event) => {
+//     // console.log('modal open');
+//     modalCoverElem.style.display = 'block';
+//     modalPopUpElem.style.display = 'block';
+// })
+
+// Close Modal
+modalCloseBtn.addEventListener('click', (event) => {
+    // console.log('modal close');
+    modalCoverElem.style.display = 'none';
+    modalPopUpElem.style.display = 'none';
+})
