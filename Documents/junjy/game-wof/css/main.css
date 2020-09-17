@@ -51,6 +51,7 @@ body {
     animation-iteration-count:infinite;
 }
 
+
 /* To improve animation transitions */
 
 @keyframes intro-flash {
@@ -69,12 +70,26 @@ body {
 
 #intro-footer {
     width: 100%;
-    position: relative;
+    position: absolute;
     transform: translate(0%, 300%);
     padding-top: 15px;
     display: block;
 
 }
+
+
+#btn-info {
+    float: left;
+    margin-left: 20px;
+
+}
+
+#btn-new-game {
+    float: right;
+    margin-right: 20px;
+
+}
+
 
 
 
@@ -91,10 +106,14 @@ body {
     /* margin-bottom: 30px; */
     padding: 25px 50px 50px 50px;
     text-align: left;
+
+    border: 1px solid blue;
 }
 
 #section-top h1 {
     font-family: 'Martel Sans', sans-serif;
+
+    border: 1px solid grey;
 }
 
 #section-middle {
@@ -102,12 +121,16 @@ body {
     display: inline-block;
     padding-bottom: 10px;
 
+    border: 1px solid blue;
+
 }
 
 #section-bottom {
     width: 100%;
     /* height: 50vh; */
     display: inline-block;
+
+    border: 1px solid blue;
 
 }
 
@@ -126,6 +149,8 @@ body {
     text-align: right;
     font-size: 12px;
 
+    border: 1px solid grey;
+
 }
 
 #progress-display {
@@ -135,17 +160,26 @@ body {
     text-align: right;
     font-size: 12px;
 
+    border: 1px solid grey;
+
 }
 
 
 /* ----- SECTION MIDDLE ----- */
 
 #puzzle-div {
-    width: 60%;
+    width: 400px;
     float: left;
+    /* text-align: center; */
+
+
     vertical-align: middle;
     padding-top: 50px;
     padding-right: 50px;
+    border: 1px solid grey;
+
+
+    /* white-space: nowrap; */
 
 }
 
@@ -158,6 +192,7 @@ body {
     padding-left: 0; /* amend Bootstrap */
     margin-right: 0; /* amend Bootstrap */
     margin-left: 0; /* amend Bootstrap */
+    border: 1px solid grey;
 
 }
 
@@ -196,6 +231,8 @@ body {
     color: black;
     /* vertical-align: middle; */
 
+    border: 1px solid grey;
+
 }
 
 #input-div {
@@ -204,6 +241,8 @@ body {
     padding-top: 15px;
     text-align: center;
 
+    border: 1px solid grey;
+
 }
 
 #buttons-div {
@@ -211,6 +250,8 @@ body {
     float: right;
     margin-top: 50px;
     text-align: center;
+
+    border: 1px solid grey;
 
 }
 
