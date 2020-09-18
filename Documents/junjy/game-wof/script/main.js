@@ -1,6 +1,6 @@
 'use strict'
 // SEIF3 - PROJECT #1 - WOF
-// console.log('linked main.js');
+console.log('linked main4.js');
 
 //--------- PUZZLE & WHEEL SETUP ---------//
 
@@ -20,6 +20,7 @@ const gamePg = document.querySelector('#game-page');
 const timerDiv = document.querySelector('#timer-display');
 const progDiv = document.querySelector('#progress-display');
 
+const sectionMid = document.querySelector('#section-middle');
 const puzzleDiv = document.querySelector('#puzzle-div');
 const wheelDiv = document.querySelector('#wheel-div');
 const wheelImg = document.querySelector('#wheel-img');
@@ -34,7 +35,7 @@ const vowelsRegex = /^[aeiou]$/i;
 const consonantsRegex = /^[bcdfghjklmnpqrstvwxyz]$/i; 
 
 // To amend later
-timerDiv.innerHTML = 'Time left: XX sec';
+timerDiv.innerHTML = '';
 
 // Transferred puzzleArray to puzzles.js
 
@@ -42,15 +43,17 @@ const wheelValues = [300, 400, 500, 600, 700, 800, 900, 1000, 2500, 300, 400, 50
 const vowelCost = 250;
 
 // For Game Timer Functions
+let isTimerOn = false; // set option for player at start of game
 let countdownTimer; // for checkTime function
-const timerBtn = 8; // timer to select buttons
-const timerLetter = 5;
-const timerSolve = 10;
+const timerBtn = 10; // timer to select buttons
+const timerLetter = 8;
+const timerSolve = 12;
 
 // For Msg Display Timer
 const typMsgDelay = 1000; // 1 sec
 const spinMsgDelay = 3000; // 3 sec
 const dispLetterDelay = 100; 
+
 
 // To check if needed
 let tempInput = ""; //for name, guess letter, vowel, puzzle
@@ -142,6 +145,16 @@ let btnExitGame = document.createElement('button');
     btnExitGame.setAttribute('id', 'btn-exit-game');  
     btnExitGame.innerHTML = 'exitGame';
     btnExitGame.setAttribute('class', 'btn btn-outline-danger'); 
+
+let btnTimerOn = document.createElement('button');
+    btnTimerOn.setAttribute('id', 'btn-timer-on');    
+    btnTimerOn.innerHTML = 'YES';
+    btnTimerOn.setAttribute('class', 'btn btn-outline-success');
+
+let btnTimerOff = document.createElement('button');
+    btnTimerOff.setAttribute('id', 'btn-timer-off');  
+    btnTimerOff.innerHTML = 'NO';
+    btnTimerOff.setAttribute('class', 'btn btn-outline-danger'); 
 
 // ------ TEST INPUT FIELD ------//
 
@@ -405,7 +418,11 @@ function checkValidConsonant(spinValue, input) {
                 }
                 
                 showProgress(playerCurrent.round, playerCurrent.earnedCurrent, playerCurrent.earnedTotal);
-                // checkTime(timerBtn);
+
+                if (isTimerOn) {
+                    checkTime(timerBtn);
+                }
+
                 
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
                 console.log('Current Earnings: $' + playerCurrent.earnedCurrent);
@@ -491,7 +508,10 @@ function checkValidVowel(input) {
                 }
                 
                 showProgress(playerCurrent.round, playerCurrent.earnedCurrent, playerCurrent.earnedTotal);
-                // checkTime(timerBtn);
+
+                if (isTimerOn) {
+                    checkTime(timerBtn);
+                }
 
                 console.log('Guessed vowels to-date: ' + guessLettersCurrent.vowels);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);       
@@ -530,9 +550,16 @@ function initGame() {
 // Refine function later
 function startNewGame() {
     btnNewGame.remove(); 
-    initPlayer();
     introPg.style.display = 'none';
     gamePg.style.display = 'inline';
+    sectionMid.style.display = 'none';
+
+    // ask buyer if want to turn on
+    showMsg('Play game with timer?');
+    scoreDiv.append(lineBreak, btnTimerOn, btnTimerOff);
+
+    // initPlayer();
+
 
 }
 
@@ -566,7 +593,10 @@ function startNewRound() {
     gamePg.style.display = 'inline';
     enableButtons;
     wheelTurnOn();
-    // checkTime(timerBtn);
+
+    if (isTimerOn) {
+        checkTime(timerBtn);
+    }
 
     showMsg('Welcome!<br> Please spin the wheel to proceed.');
 
@@ -574,9 +604,10 @@ function startNewRound() {
 
 }
 
-// display buttons
+
 function initPlayer(name) {
 
+    sectionMid.style.display = 'block';
     initPuzzle();
     enableButtons;
     wheelTurnOn();
@@ -586,7 +617,6 @@ function initPlayer(name) {
 }
 
 
-// Review no. of variables declared later
 function initPuzzle() {
 
     let randNum = Math.floor(Math.random() * puzzleArray.length);
@@ -596,60 +626,128 @@ function initPuzzle() {
     console.log('split text: ' + puzzleCurrent.splitText);
     let puzzleCharLen = puzzleCurrent.splitText.length;
 
-
     audioNewPuzzle();
 
-    // check no word wrap
+    // REVISED CODE TO PREVENT WORD WRAP
+    // split puzzle into words and assign div container
+    // within each div container, split word into letters
 
-    // Generate squares for each letter
-    for (let i = 0; i < puzzleCharLen; i++) {
+    let wordArr = puzzleCurrent.text.toUpperCase().split(' ');
+    // console.log('word array: ' + wordArr);
+    let wordCount = 0;
 
-        let element = puzzleCurrent.splitText[i];
-        // console.log('element :' + element + ', index no.: ' + i);
+    // split puzzle into words and assign div container
+    wordArr.forEach((word) => {
+        
+        let letterArr = word.split('');
+        let letterArrLen = letterArr.length;
+        // console.log('letter array: ' + letterArr);
 
-        let sqDiv = document.createElement('div');
-        sqDiv.setAttribute('class', 'square-box');
+        let wordSpan = document.createElement('span');
+            wordSpan.setAttribute('class', 'word-span');
 
-        // Check if letter is vowel or consonant
-        let letterCheck = isVowelOrConsonant(element);
-        let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
-        let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
+        puzzleDiv.append(wordSpan);
+        wordCount += 1;
+        
+    // within each div container, split word into letters
+        for (let i = 0; i < letterArrLen; i++) {
 
-        if (letterCheck === 'vowel' && isVowelUnique === true) {
-            puzzleCurrent.vowels.push(element);
+            let letter = letterArr[i];
+            // console.log('letter :' + letter + ', index no.: ' + i);
+            let sqDiv = document.createElement('div');
+            sqDiv.setAttribute('class', 'square-box');
 
-        } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
-            puzzleCurrent.consonants.push(element);
+            // Check if letter is vowel or consonant
+            let letterCheck = isVowelOrConsonant(letter);
+            let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, letter);
+            let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, letter);
 
+            if (letterCheck === 'vowel' && isVowelUnique === true) {
+                puzzleCurrent.vowels.push(letter);
+            } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+                puzzleCurrent.consonants.push(letter);
+            }
+
+            if (letter === '-' || letter === "'" || letter === '.' || letter === '&' ){
+                sqDiv.classList.add('class', 'square-display');
+
+            } else {
+                letter = '_'; // ADD to vert align squares
+                sqDiv.classList.add('class', 'square-text');
+            }
+
+            hiddenArr.push(letter);
+            let letterText = document.createTextNode(letter);
+            sqDiv.append(letterText);
+            wordSpan.append(sqDiv);
         }
 
-        if (element === ' ') {
-            element = '*'; // ADD to vert align squares
-            sqDiv.classList.add('class', 'square-blank');            
-            console.log('space index no.: ' + i);
+        // add space between words, except lastoftype
+        if (wordCount < wordArr.length) {
+            let space = "*";
+            hiddenArr.push(space);
 
-            // // ERROR
-            // if (i > 10 || i > 20 || i > 30 || i > 40 || i > 50 || i > 60) {
-            //     // puzzleDiv.append(lineBreak);
+            let spaceSpan = document.createElement('span');
+                spaceSpan.classList.add('class', 'square-blank'); 
+            let spaceText = document.createTextNode(space);
+                spaceSpan.append(spaceText);
 
-            // }
-
-        } else if (element === '-' || element === "'" || element === '.' || element === '&' ){
-            sqDiv.classList.add('class', 'square-display');
-
-        } else {
-            element = '_'; // ADD to vert align squares
-            sqDiv.classList.add('class', 'square-text');
+            puzzleDiv.append(spaceSpan);
         }
+    
+    })
 
-        hiddenArr.push(element);
-        let letter = document.createTextNode(element);
-        sqDiv.append(letter);
-        puzzleDiv.append(sqDiv);
+    // // ORIGINAL CODE
+    // // Generate squares for each letter
+    // for (let i = 0; i < puzzleCharLen; i++) {
 
-    }
+    //     let element = puzzleCurrent.splitText[i];
+    //     // console.log('element :' + element + ', index no.: ' + i);
+
+    //     let sqDiv = document.createElement('div');
+    //     sqDiv.setAttribute('class', 'square-box');
+
+    //     // Check if letter is vowel or consonant
+    //     let letterCheck = isVowelOrConsonant(element);
+    //     let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
+    //     let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
+
+    //     if (letterCheck === 'vowel' && isVowelUnique === true) {
+    //         puzzleCurrent.vowels.push(element);
+
+    //     } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+    //         puzzleCurrent.consonants.push(element);
+
+    //     }
+
+    //     if (element === ' ') {
+    //         element = '*'; // ADD to vert align squares
+    //         sqDiv.classList.add('class', 'square-blank');            
+    //         console.log('space index no.: ' + i);
+
+    //         // // ERROR
+    //         // if (i > 10 || i > 20 || i > 30 || i > 40 || i > 50 || i > 60) {
+    //         //     // puzzleDiv.append(lineBreak);
+
+    //         // }
+
+    //     } else if (element === '-' || element === "'" || element === '.' || element === '&' ){
+    //         sqDiv.classList.add('class', 'square-display');
+
+    //     } else {
+    //         element = '_'; // ADD to vert align squares
+    //         sqDiv.classList.add('class', 'square-text');
+    //     }
+
+    //     hiddenArr.push(element);
+    //     let letter = document.createTextNode(element);
+    //     sqDiv.append(letter);
+    //     puzzleDiv.append(sqDiv);
+
+    // }
 
     console.log(puzzleCurrent);
+    console.log('hidden array: ' + hiddenArr);
     // puzzleBoard.append(puzzleDiv);
     console.log('Current Puzzle (vowels): ' + puzzleCurrent.vowels);
     console.log('Current Puzzle (consonants): ' + puzzleCurrent.consonants);
@@ -813,8 +911,6 @@ function spinWheel() {
 
     disableButtons();
 
-    
-
     // set to spin value from wheel.js
     let spinValueCurrent = spinValueFrWheel;
     console.log('Spin Value Fr Wheel: ' + spinValueCurrent);
@@ -831,6 +927,9 @@ function spinWheel() {
 
     } else {
 
+        if (isTimerOn) {
+            clearInterval(countdownTimer);
+        }
         resetEarnings();
         btnBuyVowel.disabled = false;
         btnSolvePuzzle.disabled = false;
@@ -873,13 +972,17 @@ function guessLetter(spinValue) {
     inputDiv.append(inputConsonant);
     inputConsonant.focus();
 
-    // checkTime(timerLetter);
+    if (isTimerOn) {
+        checkTime(timerLetter);
+    }
 
     inputConsonant.onkeydown = function(event) {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
+        if (isTimerOn) {
             clearInterval(countdownTimer);
+        }
             timerDiv.innerHTML = "";
 
             tempInput = inputConsonant.value.toUpperCase();
@@ -913,13 +1016,18 @@ function buyVowel() {
 
         inputDiv.append(inputVowel);
         inputVowel.focus();
-        // checkTime(timerLetter);
+
+        if (isTimerOn) {
+            checkTime(timerLetter);
+        }
 
         inputVowel.onkeydown = function(event) {
     
             if (event.keyCode === 13) { // 13 refers to 'ENTER' key
-    
-                clearInterval(countdownTimer);
+
+                if (isTimerOn) {
+                    clearInterval(countdownTimer);
+                }
                 timerDiv.innerHTML = "";
 
                 tempInput = inputVowel.value.toUpperCase();
@@ -961,13 +1069,18 @@ function solvePuzzle() {
 
     inputDiv.append(inputSolve);
     inputSolve.focus();
-    // checkTime(timerSolve);
+
+    if (isTimerOn) {
+        checkTime(timerSolve);
+    }
 
     inputSolve.onkeydown = function(event) {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
-            clearInterval(countdownTimer);
+            if (isTimerOn) {
+                clearInterval(countdownTimer);
+            }
             timerDiv.innerHTML = "";
 
             tempInput = inputSolve.value.toUpperCase();
@@ -1039,6 +1152,9 @@ function exitGame(msg) {
 
     // clear UI
     // btnSpinWheel.remove();
+    if (isTimerOn) {
+        clearInterval(countdownTimer);
+    }
     btnNextRound.remove();
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
@@ -1051,11 +1167,14 @@ function exitGame(msg) {
     wheelTurnOff();
 
     if (msg === 'default') {
+
+        wheelImg.style.display = 'block';
         showMsg('Bye, ' + playerCurrent.name + '! See you next time!');
         showMsg('Bye, see you next time!');
 
     } 
     else {
+        wheelImg.style.display = 'block';
         showMsg(msg);
         resetEarnings();
     
@@ -1090,28 +1209,38 @@ btnNewGame.addEventListener('click', (event) => {
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');
-    // clearInterval(countdownTimer);
+    if (isTimerOn) {
+        clearInterval(countdownTimer);
+    }
     timerDiv.innerHTML = "";
     buyVowel();
 })
 
 btnSolvePuzzle.addEventListener('click', (event) => {
     console.log('solve puzzle btn clicked');
-    // clearInterval(countdownTimer);
+
+    if (isTimerOn) {
+        clearInterval(countdownTimer);
+    }
     timerDiv.innerHTML = "";
     solvePuzzle();
 })
 
 btnNextRound.addEventListener('click', (event) => {
     console.log('next round btn clicked');
-    // clearInterval(countdownTimer);
+    if (isTimerOn) {
+        clearInterval(countdownTimer);
+    }
     timerDiv.innerHTML = "";
     startNewRound();
 })
 
 btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
-    // clearInterval(countdownTimer);
+
+    if (isTimerOn) {
+        clearInterval(countdownTimer);
+    }
     timerDiv.innerHTML = "";
     // checkIfExitGame();
     exitGame('default');
@@ -1139,4 +1268,23 @@ modalCloseBtn.addEventListener('click', (event) => {
     // console.log('modal close');
     modalCoverElem.style.display = 'none';
     modalPopUpElem.style.display = 'none';
+})
+
+
+btnTimerOn.addEventListener('click', (event) => {
+    console.log('timer on btn clicked');
+    isTimerOn = true;
+    btnTimerOn.remove();
+    btnTimerOff.remove();
+
+    initPlayer();
+})
+
+btnTimerOff.addEventListener('click', (event) => {
+    console.log('timer off btn clicked');
+    isTimerOn = false;
+    btnTimerOn.remove();
+    btnTimerOff.remove();
+
+    initPlayer();
 })

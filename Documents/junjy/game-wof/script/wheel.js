@@ -1,6 +1,6 @@
 // 'use strict'
 
-console.log('linked test_wheel.js');
+console.log('linked wheel.js');
 
 // to tidy up code later
 

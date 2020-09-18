@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Martel+Sans:wght@700&family=Roboto&family=Roboto+Slab:wght@500&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 
     <title>Wheel of Fortune</title>
@@ -17,14 +18,18 @@
 
     <!-- <div class='modal-cover'> -->
 
-        <div id='intro-page'>
-            <div id='intro-logo'>wheel.of<br \>.fortune</div>
+        <div id='intro-page' class='container'>
+            <div id='logo-holder'>
+                <div id='intro-logo'>wheel.of<br \>.fortune</div>
+            </div>
+
             <div id='intro-footer'></div>
         </div>
 
         <div id='game-page'>
             <div id='section-top'>
-                <h1>wheel.of.fortune</h1>
+                <!-- <h1>wheel.of.fortune</h1> -->
+                <p id='game-header'>wheel.of.fortune</p>
                 <div id='timer-display'></div>
                 <div id='progress-display'></div>
             </div>
@@ -34,7 +39,13 @@
 
                 <div id='wheel-div'>
                     <!--- For Wheel -->
-                    <div id="wheel-img"><img src="https://via.placeholder.com/225"></div> <!-- wheel img only -->
+                    <div id="wheel-img">
+                        <p>G-A-M-E
+                        <br \>O-V-E-R</p>
+                        <!-- <img src="https://via.placeholder.com/225"> -->
+                        <!-- <img src="img/wheel-static4.png" width="220" height="210" style="padding-top: 10px"> -->
+                        <!-- width="225" height="225" -->
+                    </div> <!-- wheel img only -->
                     <div id="chart"></div> <!-- actual wheel -->
                     <!--- END Wheel -->
                 </div>
@@ -121,11 +132,12 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="script/main.js"></script>
+    <!-- <script src="script/main4.js"></script> -->
     <script src="script/puzzles.js"></script>   
     <!-- <script src="script/test_input.js"></script> -->
     <!-- <script src="script/test_puzzle.js"></script> -->
 
-    <!---Link for test wheel-->
+    <!---Link for wheel-->
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="script/wheel.js"></script>
   </body>
