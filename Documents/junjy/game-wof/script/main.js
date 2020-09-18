@@ -1,6 +1,6 @@
 'use strict'
 // SEIF3 - PROJECT #1 - WOF
-console.log('linked main4.js');
+console.log('linked main.js');
 
 //--------- PUZZLE & WHEEL SETUP ---------//
 
@@ -45,8 +45,9 @@ const vowelCost = 250;
 // For Game Timer Functions
 let isTimerOn = false; // set option for player at start of game
 let countdownTimer; // for checkTime function
-const timerBtn = 10; // timer to select buttons
-const timerLetter = 8;
+const timerSpinWheel = 4;
+// const timerBtn = 10; // timer to select buttons
+const timerLetter = 10;
 const timerSolve = 12;
 
 // For Msg Display Timer
@@ -75,6 +76,7 @@ let puzzleCurrent = {
 };
 
 let hiddenArr = [];
+let wordArr = [];
 
 // letters guessed for current game only
 let guessLettersCurrent = {
@@ -419,9 +421,9 @@ function checkValidConsonant(spinValue, input) {
                 
                 showProgress(playerCurrent.round, playerCurrent.earnedCurrent, playerCurrent.earnedTotal);
 
-                if (isTimerOn) {
-                    checkTime(timerBtn);
-                }
+                // if (isTimerOn === true) {
+                //     checkTime(timerBtn);
+                // }
 
                 
                 console.log('Guessed consonants to-date: ' + guessLettersCurrent.consonants);
@@ -509,9 +511,9 @@ function checkValidVowel(input) {
                 
                 showProgress(playerCurrent.round, playerCurrent.earnedCurrent, playerCurrent.earnedTotal);
 
-                if (isTimerOn) {
-                    checkTime(timerBtn);
-                }
+                // if (isTimerOn === true) {
+                //     checkTime(timerBtn);
+                // }
 
                 console.log('Guessed vowels to-date: ' + guessLettersCurrent.vowels);
                 console.log('Current Earnings: ' + playerCurrent.earnedCurrent);       
@@ -594,9 +596,9 @@ function startNewRound() {
     enableButtons;
     wheelTurnOn();
 
-    if (isTimerOn) {
-        checkTime(timerBtn);
-    }
+    // if (isTimerOn === true) {
+    //     checkTime(timerBtn);
+    // }
 
     showMsg('Welcome!<br> Please spin the wheel to proceed.');
 
@@ -607,7 +609,7 @@ function startNewRound() {
 
 function initPlayer(name) {
 
-    sectionMid.style.display = 'block';
+    sectionMid.style.display = 'inline-block';
     initPuzzle();
     enableButtons;
     wheelTurnOn();
@@ -628,123 +630,125 @@ function initPuzzle() {
 
     audioNewPuzzle();
 
-    // REVISED CODE TO PREVENT WORD WRAP
-    // split puzzle into words and assign div container
-    // within each div container, split word into letters
+    // // REVISED CODE TO PREVENT WORD WRAP
+    // // generate squares
+    // wordArr = puzzleCurrent.text.toUpperCase().split(' ');
+    // // console.log('word array: ' + wordArr);
+    // let wordCount = 0;
 
-    let wordArr = puzzleCurrent.text.toUpperCase().split(' ');
-    // console.log('word array: ' + wordArr);
-    let wordCount = 0;
-
-    // split puzzle into words and assign div container
-    wordArr.forEach((word) => {
+    // // split puzzle into words and assign div container
+    // wordArr.forEach((word) => {
         
-        let letterArr = word.split('');
-        let letterArrLen = letterArr.length;
-        // console.log('letter array: ' + letterArr);
+    //     let letterArr = word.split('');
+    //     let letterArrLen = letterArr.length;
+    //     // console.log('letter array: ' + letterArr);
 
-        let wordSpan = document.createElement('span');
-            wordSpan.setAttribute('class', 'word-span');
+    //     let wordSpan = document.createElement('span');
+    //         wordSpan.setAttribute('class', 'word-span');
 
-        puzzleDiv.append(wordSpan);
-        wordCount += 1;
+    //     puzzleDiv.append(wordSpan);
+    //     wordCount += 1;
         
-    // within each div container, split word into letters
-        for (let i = 0; i < letterArrLen; i++) {
+    // // within each div container, split word into letters
+    //     for (let i = 0; i < letterArrLen; i++) {
 
-            let letter = letterArr[i];
-            // console.log('letter :' + letter + ', index no.: ' + i);
-            let sqDiv = document.createElement('div');
-            sqDiv.setAttribute('class', 'square-box');
+    //         let letter = letterArr[i];
+    //         // console.log('letter :' + letter + ', index no.: ' + i);
+    //         let sqDiv = document.createElement('div');
+    //         sqDiv.setAttribute('class', 'square-box');
 
-            // Check if letter is vowel or consonant
-            let letterCheck = isVowelOrConsonant(letter);
-            let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, letter);
-            let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, letter);
+    //         // Check if letter is vowel or consonant
+    //         let letterCheck = isVowelOrConsonant(letter);
+    //         let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, letter);
+    //         let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, letter);
 
-            if (letterCheck === 'vowel' && isVowelUnique === true) {
-                puzzleCurrent.vowels.push(letter);
-            } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
-                puzzleCurrent.consonants.push(letter);
-            }
+    //         if (letterCheck === 'vowel' && isVowelUnique === true) {
+    //             puzzleCurrent.vowels.push(letter);
+    //         } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+    //             puzzleCurrent.consonants.push(letter);
+    //         }
 
-            if (letter === '-' || letter === "'" || letter === '.' || letter === '&' ){
-                sqDiv.classList.add('class', 'square-display');
+    //         if (letter === '-' || letter === "'" || letter === '.' || letter === '&' ){
+    //             sqDiv.classList.add('square-display');
 
-            } else {
-                letter = '_'; // ADD to vert align squares
-                sqDiv.classList.add('class', 'square-text');
-            }
+    //         } else {
+    //             letter = '_'; // ADD to vert align squares
+    //             sqDiv.classList.add('square-text');
+    //         }
 
-            hiddenArr.push(letter);
-            let letterText = document.createTextNode(letter);
-            sqDiv.append(letterText);
-            wordSpan.append(sqDiv);
-        }
+    //         hiddenArr.push(letter);
+    //         let letterText = document.createTextNode(letter);
+    //         sqDiv.append(letterText);
+    //         wordSpan.append(sqDiv);
+    //     }
 
-        // add space between words, except lastoftype
-        if (wordCount < wordArr.length) {
-            let space = "*";
-            hiddenArr.push(space);
+    //     // add space between words, except lastoftype
+    //     if (wordCount < wordArr.length) {
+    //         let space = "*";
+    //         hiddenArr.push(space);
 
-            let spaceSpan = document.createElement('span');
-                spaceSpan.classList.add('class', 'square-blank'); 
-            let spaceText = document.createTextNode(space);
-                spaceSpan.append(spaceText);
+    //         let spaceSpan = document.createElement('span');
+    //             spaceSpan.setAttribute('class', 'space');
+    //             spaceSpan.classList.add('square-blank');
+    //         // let sqDiv = document.createElement('div');
+    //         //     sqDiv.setAttribute('class', 'square-blank');
+    //         let spaceText = document.createTextNode(space);
+    //             spaceSpan.append(spaceText);
+    //             // spaceSpan.append(sqDiv);
 
-            puzzleDiv.append(spaceSpan);
-        }
+    //         puzzleDiv.append(spaceSpan);
+    //     }
     
-    })
+    // })
 
     // // ORIGINAL CODE
     // // Generate squares for each letter
-    // for (let i = 0; i < puzzleCharLen; i++) {
+    for (let i = 0; i < puzzleCharLen; i++) {
 
-    //     let element = puzzleCurrent.splitText[i];
-    //     // console.log('element :' + element + ', index no.: ' + i);
+        let element = puzzleCurrent.splitText[i];
+        // console.log('element :' + element + ', index no.: ' + i);
 
-    //     let sqDiv = document.createElement('div');
-    //     sqDiv.setAttribute('class', 'square-box');
+        let sqDiv = document.createElement('div');
+        sqDiv.setAttribute('class', 'square-box');
 
-    //     // Check if letter is vowel or consonant
-    //     let letterCheck = isVowelOrConsonant(element);
-    //     let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
-    //     let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
+        // Check if letter is vowel or consonant
+        let letterCheck = isVowelOrConsonant(element);
+        let isVowelUnique = checkIfLetterUnique(puzzleCurrent.vowels, element);
+        let isConsonantUnique = checkIfLetterUnique(puzzleCurrent.consonants, element);
 
-    //     if (letterCheck === 'vowel' && isVowelUnique === true) {
-    //         puzzleCurrent.vowels.push(element);
+        if (letterCheck === 'vowel' && isVowelUnique === true) {
+            puzzleCurrent.vowels.push(element);
 
-    //     } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
-    //         puzzleCurrent.consonants.push(element);
+        } else if (letterCheck === 'consonant' && isConsonantUnique === true) {
+            puzzleCurrent.consonants.push(element);
 
-    //     }
+        }
 
-    //     if (element === ' ') {
-    //         element = '*'; // ADD to vert align squares
-    //         sqDiv.classList.add('class', 'square-blank');            
-    //         console.log('space index no.: ' + i);
+        if (element === ' ') {
+            element = '*'; // ADD to vert align squares
+            sqDiv.classList.add('square-blank');            
+            console.log('space index no.: ' + i);
 
-    //         // // ERROR
-    //         // if (i > 10 || i > 20 || i > 30 || i > 40 || i > 50 || i > 60) {
-    //         //     // puzzleDiv.append(lineBreak);
+            // // ERROR
+            // if (i > 10 || i > 20 || i > 30 || i > 40 || i > 50 || i > 60) {
+            //     // puzzleDiv.append(lineBreak);
 
-    //         // }
+            // }
 
-    //     } else if (element === '-' || element === "'" || element === '.' || element === '&' ){
-    //         sqDiv.classList.add('class', 'square-display');
+        } else if (element === '-' || element === "'" || element === '.' || element === '&' ){
+            sqDiv.classList.add('square-display');
 
-    //     } else {
-    //         element = '_'; // ADD to vert align squares
-    //         sqDiv.classList.add('class', 'square-text');
-    //     }
+        } else {
+            element = '_'; // ADD to vert align squares
+            sqDiv.classList.add('square-text');
+        }
 
-    //     hiddenArr.push(element);
-    //     let letter = document.createTextNode(element);
-    //     sqDiv.append(letter);
-    //     puzzleDiv.append(sqDiv);
+        hiddenArr.push(element);
+        let letter = document.createTextNode(element);
+        sqDiv.append(letter);
+        puzzleDiv.append(sqDiv);
 
-    // }
+    }
 
     console.log(puzzleCurrent);
     console.log('hidden array: ' + hiddenArr);
@@ -818,12 +822,29 @@ function showCorrectLetters(letter) {
     for (let i = 0; i < puzzleCurrent.splitText.length; i++) {
         if (letter === puzzleCurrent.splitText[i]) {
             hiddenArr[i] = letter;
+            console.log('hidden array letter: ' + hiddenArr[i]);
         }
     };
 
+    // span span elements with word span
+    // push updated blank array into sqDiv
+
+    // let spanElem = document.querySelectorAll('word');
+
+    // console.log(spanElem);
+
+        // if span class = word, to find children
+
+            // let tempSqText = puzzleDiv.children[j].innerHTML;
+            // let tempGuessArray = hiddenArr[j];
+            // console.log('tempSqText: ' + tempSqText + 'tempGuessArray: ' + tempGuessArray);
+
+    
+
+    // ORIGINAL CODE
     // push updated blank array into sqDiv
     let puzzleLength = puzzleCurrent.splitText.length;
-    
+
     for (let j = 0; j < puzzleLength; j++) {
 
         let tempSqText = puzzleDiv.children[j].innerHTML;
@@ -876,14 +897,14 @@ function showAllLetters() {
 
 
 function wheelTurnOn() {
-    wheelImg.style.display = 'none';
     wheelActual.style.display = 'inline';
+    wheelImg.style.display = 'none';
 
 }
 
 function wheelTurnOff() {
-    wheelImg.style.display = 'inline';
     wheelActual.style.display = 'none';
+    wheelImg.style.display = 'inline';
 
 }
 
@@ -920,16 +941,16 @@ function spinWheel() {
     if (spinValueCurrent != 'BANKRUPT') {
         // delay msg display until spin over
         setTimeout(function() {
-            showMsg('You spinned $' + spinValueCurrent + '! Guess a letter (consonant).');
+            showMsg('You spinned $' + spinValueCurrent + '!<br \>Guess a consonant.');
             guessLetter(spinValueCurrent);
         
         }, spinMsgDelay);
 
     } else {
 
-        if (isTimerOn) {
+        // if (isTimerOn === true) {
             clearInterval(countdownTimer);
-        }
+        // }
         resetEarnings();
         btnBuyVowel.disabled = false;
         btnSolvePuzzle.disabled = false;
@@ -972,17 +993,17 @@ function guessLetter(spinValue) {
     inputDiv.append(inputConsonant);
     inputConsonant.focus();
 
-    if (isTimerOn) {
-        checkTime(timerLetter);
+    if (isTimerOn === true) {
+        checkTime(timerSpinWheel + timerLetter);
     }
 
     inputConsonant.onkeydown = function(event) {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
-        if (isTimerOn) {
+        // if (isTimerOn === true) {
             clearInterval(countdownTimer);
-        }
+        // }
             timerDiv.innerHTML = "";
 
             tempInput = inputConsonant.value.toUpperCase();
@@ -994,6 +1015,7 @@ function guessLetter(spinValue) {
             }
             else {
 
+                clearInterval(countdownTimer);
                 inputConsonant.remove();
                 checkValidConsonant(spinValue, tempInput);
                 // tempInput === '';
@@ -1017,7 +1039,7 @@ function buyVowel() {
         inputDiv.append(inputVowel);
         inputVowel.focus();
 
-        if (isTimerOn) {
+        if (isTimerOn === true) {
             checkTime(timerLetter);
         }
 
@@ -1025,9 +1047,9 @@ function buyVowel() {
     
             if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
-                if (isTimerOn) {
+                // if (isTimerOn === true) {
                     clearInterval(countdownTimer);
-                }
+                // }
                 timerDiv.innerHTML = "";
 
                 tempInput = inputVowel.value.toUpperCase();
@@ -1040,6 +1062,8 @@ function buyVowel() {
     
                 }
                 else {
+
+                    clearInterval(countdownTimer);
                     inputVowel.remove();
                     checkValidVowel(tempInput);
                     inputVowel.value = '';
@@ -1070,7 +1094,7 @@ function solvePuzzle() {
     inputDiv.append(inputSolve);
     inputSolve.focus();
 
-    if (isTimerOn) {
+    if (isTimerOn === true) {
         checkTime(timerSolve);
     }
 
@@ -1078,9 +1102,9 @@ function solvePuzzle() {
 
         if (event.keyCode === 13) { // 13 refers to 'ENTER' key
 
-            if (isTimerOn) {
+            // if (isTimerOn === true) {
                 clearInterval(countdownTimer);
-            }
+            // }
             timerDiv.innerHTML = "";
 
             tempInput = inputSolve.value.toUpperCase();
@@ -1132,7 +1156,7 @@ function winGame() {
         inputSolve.value = '';
 
         if (playerCurrent.round < 3) {
-            showMsg('Congrats! You solved the puzzle! You\'ve earned $' + playerCurrent.earnedCurrent + ' for this round! Play next round?');
+            showMsg('Congrats! You solved the puzzle!<br \>You\'ve earned $' + playerCurrent.earnedCurrent + ' for this round! Play next round?');
             buttonsDiv.append(btnNextRound, btnExitGame);
 
         } else {
@@ -1152,9 +1176,9 @@ function exitGame(msg) {
 
     // clear UI
     // btnSpinWheel.remove();
-    if (isTimerOn) {
+    // if (isTimerOn === true) {
         clearInterval(countdownTimer);
-    }
+    // }
     btnNextRound.remove();
     btnBuyVowel.remove();
     btnSolvePuzzle.remove();
@@ -1165,16 +1189,16 @@ function exitGame(msg) {
     buttonsDiv.append(btnInfo, btnNewGame);
     // buttonsDiv.append(btnNewGame);
     wheelTurnOff();
+    timerDiv.innerHTML = ""; 
 
     if (msg === 'default') {
 
-        wheelImg.style.display = 'block';
         showMsg('Bye, ' + playerCurrent.name + '! See you next time!');
         showMsg('Bye, see you next time!');
 
     } 
     else {
-        wheelImg.style.display = 'block';
+
         showMsg(msg);
         resetEarnings();
     
@@ -1209,9 +1233,9 @@ btnNewGame.addEventListener('click', (event) => {
 
 btnBuyVowel.addEventListener('click', (event) => {
     console.log('buy vowel btn clicked');
-    if (isTimerOn) {
+    // if (isTimerOn === true) {
         clearInterval(countdownTimer);
-    }
+    // }
     timerDiv.innerHTML = "";
     buyVowel();
 })
@@ -1219,18 +1243,18 @@ btnBuyVowel.addEventListener('click', (event) => {
 btnSolvePuzzle.addEventListener('click', (event) => {
     console.log('solve puzzle btn clicked');
 
-    if (isTimerOn) {
+    // if (isTimerOn === true) {
         clearInterval(countdownTimer);
-    }
+    // }
     timerDiv.innerHTML = "";
     solvePuzzle();
 })
 
 btnNextRound.addEventListener('click', (event) => {
     console.log('next round btn clicked');
-    if (isTimerOn) {
+    // if (isTimerOn === true) {
         clearInterval(countdownTimer);
-    }
+    // }
     timerDiv.innerHTML = "";
     startNewRound();
 })
@@ -1238,9 +1262,9 @@ btnNextRound.addEventListener('click', (event) => {
 btnExitGame.addEventListener('click', (event) => {
     console.log('exit game btn clicked');
 
-    if (isTimerOn) {
+    // if (isTimerOn === true) {
         clearInterval(countdownTimer);
-    }
+    // }
     timerDiv.innerHTML = "";
     // checkIfExitGame();
     exitGame('default');

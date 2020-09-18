@@ -93,16 +93,16 @@ body {
 
 @keyframes intro-flash {
     0%   {background-color: rgb(220, 220, 220); color: black;}
-    33%  {background-color: rgb(255, 230, 150); color: black;} 
-    66%  {background-color: rgb(200, 90, 90); color: white;}
-    100% {background-color: rgb(255, 230, 150); color: black;}     
+    33%  {background-color: rgb(255, 230, 150); color: rgb(65, 65, 65);} 
+    66%  {background-color: rgb(246, 178, 107); color: rgb(150, 150, 150)} 
+    100% {background-color: rgb(200, 90, 90); color: white;} 
 }
 
 @keyframes intro-flash-outer {
     0%   {border-color: rgb(255, 230, 150);}
     33%  {border-color: rgb(220, 220, 220);} 
-    66% {border-color: rgb(220, 220, 220);}
-    100%  {border-color: rgb(220, 220, 220);} 
+    66%  {border-color: rgb(255, 230, 150);}
+    100% {border-color: rgb(220, 220, 220);} 
 }
 
 
@@ -161,8 +161,8 @@ body {
     max-height: 80px;
     /* padding: 0; */
     display: inline-block;
-    margin-top: 25px;
-    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 5px;
     /* padding: 25px 50px 50px 15px; */
     text-align: left;
 /* 
@@ -199,7 +199,7 @@ body {
     width: 60%;
     float: left;
     font-family: 'Martel Sans', sans-serif;
-    border: 1px solid grey;
+    /* border: 1px solid grey; */
     /* padding: 25px 50px 50px 15px; */
     padding-left: 15px;
 }
@@ -251,7 +251,7 @@ body {
     /* text-align: center; */
 
     vertical-align: middle;
-    padding: 75px 75px 0px 50px;
+    padding: 50px 60px 0px 50px;
     /* padding-top: 75px; */
     /* padding-right: 50px; */
     /* border: 1px solid grey; */
@@ -283,13 +283,12 @@ body {
     /* font-size: 35px;
     font-weight: bold; */
     padding-top: 150px;
-    display: none;
+    /* display: none; */
 
 }
 
 
 #wheel-img p {
-
     font-family: 'Roboto', sans-serif;
     text-align: center;
     font-size: 50px;
@@ -297,10 +296,8 @@ body {
     color: rgb(200, 90, 90);
 
     /* Add animation later */
-    animation: animate__shakeX;
-    animation-duration: 2s;
-
-    display: none;
+    /* animation: animate__shakeX;
+    animation-duration: 2s; */
 
 }
 
@@ -313,7 +310,7 @@ body {
     content: open-quote;
     font-family: 'Roboto Slab', serif;
     margin-left: 0px;
-    padding-left: 30px;
+    padding-left: 20px;
     /* padding-right: 20px; */
     font-size: 35px;
     text-align: left;
@@ -360,6 +357,7 @@ body {
     min-height: 50px;
     float: right;
     padding-top: 25px;
+    /* padding-top: 15px; */
     text-align: center;
 
     /* border: 1px solid grey; */
@@ -372,6 +370,7 @@ body {
     min-height: 100px;
     float: right;
     padding-top: 15px;
+    /* padding-top: 25px; */
     text-align: center;
 
     /* border: 1px solid grey; */
@@ -381,7 +380,7 @@ body {
 /* ----- FOR PUZZLE BOARD ----- */
 
 .word-span {
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     white-space: nowrap;
     
 }
@@ -401,6 +400,8 @@ body {
     background-color: white;
     color: white;
     /* display: none; */
+    
+    white-space: nowrap;
 
 }
 
@@ -510,8 +511,8 @@ text {
     /* position:absolute; */
     /* width:500px;
     height:500px; */
-    width:300px;
-    height:300px;
+    width: 225px;
+    height: 225px;
     padding: 0;
     margin: 0;
     float: top;
